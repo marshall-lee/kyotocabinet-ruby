@@ -12,8 +12,3 @@ spec = Gem::Specification.new do |s|
   s.require_path = "."
   s.extensions = [ "extconf.rb" ]
 end
-
-if $0 == __FILE__
-  Gem::manage_gems
-  Gem::Builder.new(spec).build
-end
