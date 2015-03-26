@@ -187,6 +187,12 @@ visitor.
 <li><strong>@return</strong> true on success, or false on failure.
 
 </li>
+<li><strong>@note</strong> The operation for each record is performed
+atomically and other threads accessing the same record are blocked. To
+avoid deadlock, any explicit database operation must not be performed in
+this method.
+
+</li>
 </ul>
 
         </div>

@@ -183,6 +183,7 @@ module KyotoCabinet
     # @param step true to move the cursor to the next record, or false for no move.
     # @block If it is specified, the block is called as the visitor.
     # @return true on success, or false on failure.
+    # @note The operation for each record is performed atomically and other threads accessing the same record are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
     def accept(visitor, writable = true, step = false)
       # (native code)
     end
@@ -302,7 +303,7 @@ module KyotoCabinet
     # Create a database object.
     # @param opts the optional features by bitwise-or: DB::GEXCEPTIONAL for the exceptional mode, DB::GCONCURRENT for the concurrent mode.
     # @return the database object.
-    # @note The exceptional mode means that fatal errors caused by methods are reported by exceptions raised.  The concurrent mode means that database operations by multiple threads are performed concurrently without the giant VM lock.  However, it has a side effect that such methods with call back of Ruby code as DB#accept, DB#iterate, DB#each, DB#each_key, DB#each_value, Cursor#accept are disabled.
+    # @note The exceptional mode means that fatal errors caused by methods are reported by exceptions raised.  The concurrent mode means that database operations by multiple threads are performed concurrently without the giant VM lock.  However, it has a side effect that such methods with call back of Ruby code as DB#accept, DB#accept_bulk, DB#iterate, DB#each, DB#each_key, DB#each_value, Cursor#accept are disabled.
     def initialize(opts = 0)
       # (native code)
     end
@@ -312,10 +313,10 @@ module KyotoCabinet
       # (native code)
     end
     # Open a database file.
-    # @param path the path of a database file.  If it is "-", the database will be a prototype hash database.  If it is "+", the database will be a prototype tree database.  If it is ":", the database will be a stash database.  If it is "*", the database will be a cache hash database.  If it is "%", the database will be a cache tree database.  If its suffix is ".kch", the database will be a file hash database.  If its suffix is ".kct", the database will be a file tree database.  If its suffix is ".kcd", the database will be a directory hash database.  If its suffix is ".kcf", the database will be a directory tree database.  Otherwise, this function fails.  Tuning parameters can trail the name, separated by "#".  Each parameter is composed of the name and the value, separated by "=".  If the "type" parameter is specified, the database type is determined by the value in "-", "+", ":", "*", "%", "kch", "kct", "kcd", and "kcf".  All database types support the logging parameters of "log", "logkinds", and "logpx".  The prototype hash database and the prototype tree database do not support any other tuning parameter.  The stash database supports "bnum".  The cache hash database supports "opts", "bnum", "zcomp", "capcount", "capsize", and "zkey".  The cache tree database supports all parameters of the cache hash database except for capacity limitation, and supports "psiz", "rcomp", "pccap" in addition.  The file hash database supports "apow", "fpow", "opts", "bnum", "msiz", "dfunit", "zcomp", and "zkey".  The file tree database supports all parameters of the file hash database and "psiz", "rcomp", "pccap" in addition.  The directory hash database supports "opts", "zcomp", and "zkey".  The directory tree database supports all parameters of the directory hash database and "psiz", "rcomp", "pccap" in addition.
+    # @param path the path of a database file.  If it is "-", the database will be a prototype hash database.  If it is "+", the database will be a prototype tree database.  If it is ":", the database will be a stash database.  If it is "*", the database will be a cache hash database.  If it is "%", the database will be a cache tree database.  If its suffix is ".kch", the database will be a file hash database.  If its suffix is ".kct", the database will be a file tree database.  If its suffix is ".kcd", the database will be a directory hash database.  If its suffix is ".kcf", the database will be a directory tree database.  Otherwise, this function fails.  Tuning parameters can trail the name, separated by "#".  Each parameter is composed of the name and the value, separated by "=".  If the "type" parameter is specified, the database type is determined by the value in "-", "+", ":", "*", "%", "kch", "kct", "kcd", and "kcf".  All database types support the logging parameters of "log", "logkinds", and "logpx".  The prototype hash database and the prototype tree database do not support any other tuning parameter.  The stash database supports "bnum".  The cache hash database supports "opts", "bnum", "zcomp", "capcnt", "capsiz", and "zkey".  The cache tree database supports all parameters of the cache hash database except for capacity limitation, and supports "psiz", "rcomp", "pccap" in addition.  The file hash database supports "apow", "fpow", "opts", "bnum", "msiz", "dfunit", "zcomp", and "zkey".  The file tree database supports all parameters of the file hash database and "psiz", "rcomp", "pccap" in addition.  The directory hash database supports "opts", "zcomp", and "zkey".  The directory tree database supports all parameters of the directory hash database and "psiz", "rcomp", "pccap" in addition.
     # @param mode the connection mode.  DB::OWRITER as a writer, DB::OREADER as a reader.  The following may be added to the writer mode by bitwise-or: DB::OCREATE, which means it creates a new database if the file does not exist, DB::OTRUNCATE, which means it creates a new database regardless if the file exists, DB::OAUTOTRAN, which means each updating operation is performed in implicit transaction, DB::OAUTOSYNC, which means each updating operation is followed by implicit synchronization with the file system.  The following may be added to both of the reader mode and the writer mode by bitwise-or: DB::ONOLOCK, which means it opens the database file without file locking, DB::OTRYLOCK, which means locking is performed without blocking, DB::ONOREPAIR, which means the database file is not repaired implicitly even if file destruction is detected.
     # @return true on success, or false on failure.
-    # @note The tuning parameter "log" is for the original "tune_logger" and the value specifies the path of the log file, or "-" for the standard output, or "+" for the standard error.  "logkinds" specifies kinds of logged messages and the value can be "debug", "info", "warn", or "error".  "logpx" specifies the prefix of each log message.  "opts" is for "tune_options" and the value can contain "s" for the small option, "l" for the linear option, and "c" for the compress option.  "bnum" corresponds to "tune_bucket".  "zcomp" is for "tune_compressor" and the value can be "zlib" for the ZLIB raw compressor, "def" for the ZLIB deflate compressor, "gz" for the ZLIB gzip compressor, "lzo" for the LZO compressor, "lzma" for the LZMA compressor, or "arc" for the Arcfour cipher.  "zkey" specifies the cipher key of the compressor.  "capcount" is for "cap_count".  "capsize" is for "cap_size".  "psiz" is for "tune_page".  "rcomp" is for "tune_comparator" and the value can be "lex" for the lexical comparator or "dec" for the decimal comparator.  "pccap" is for "tune_page_cache".  "apow" is for "tune_alignment".  "fpow" is for "tune_fbp".  "msiz" is for "tune_map".  "dfunit" is for "tune_defrag".  Every opened database must be closed by the PolyDB::close method when it is no longer in use.  It is not allowed for two or more database objects in the same process to keep their connections to the same database file at the same time.
+    # @note The tuning parameter "log" is for the original "tune_logger" and the value specifies the path of the log file, or "-" for the standard output, or "+" for the standard error.  "logkinds" specifies kinds of logged messages and the value can be "debug", "info", "warn", or "error".  "logpx" specifies the prefix of each log message.  "opts" is for "tune_options" and the value can contain "s" for the small option, "l" for the linear option, and "c" for the compress option.  "bnum" corresponds to "tune_bucket".  "zcomp" is for "tune_compressor" and the value can be "zlib" for the ZLIB raw compressor, "def" for the ZLIB deflate compressor, "gz" for the ZLIB gzip compressor, "lzo" for the LZO compressor, "lzma" for the LZMA compressor, or "arc" for the Arcfour cipher.  "zkey" specifies the cipher key of the compressor.  "capcnt" is for "cap_count".  "capsiz" is for "cap_size".  "psiz" is for "tune_page".  "rcomp" is for "tune_comparator" and the value can be "lex" for the lexical comparator or "dec" for the decimal comparator.  "pccap" is for "tune_page_cache".  "apow" is for "tune_alignment".  "fpow" is for "tune_fbp".  "msiz" is for "tune_map".  "dfunit" is for "tune_defrag".  Every opened database must be closed by the PolyDB::close method when it is no longer in use.  It is not allowed for two or more database objects in the same process to keep their connections to the same database file at the same time.
     def open(path = ":", mode = DB::OWRITER | DB::OCREATE)
       # (native code)
     end
@@ -330,8 +331,17 @@ module KyotoCabinet
     # @param writable true for writable operation, or false for read-only operation.
     # @block If it is specified, the block is called as the visitor.
     # @return true on success, or false on failure.
-    # @note The operation for each record is performed atomically and other threads accessing the same record are blocked.
+    # @note The operation for each record is performed atomically and other threads accessing the same record are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
     def accept(key, visitor = nil, writable = true)
+      # (native code)
+    end
+    # Accept a visitor to multiple records at once.
+    # @param keys specifies an array of the keys.
+    # @param visitor a visitor object which implements the Visitor interface, or a function object which receives the key and the value.
+    # @param writable true for writable operation, or false for read-only operation.
+    # @return true on success, or false on failure.
+    # @note The operations for specified records are performed atomically and other threads accessing the same records are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
+    def accept_bulk(keys, visitor = nil, writable = true)
       # (native code)
     end
     # Iterate to accept a visitor for each record.
@@ -339,7 +349,7 @@ module KyotoCabinet
     # @param writable true for writable operation, or false for read-only operation.
     # @block If it is specified, the block is called as the visitor.
     # @return true on success, or false on failure.
-    # @note The whole iteration is performed atomically and other threads are blocked.
+    # @note The whole iteration is performed atomically and other threads are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
     def iterate(visitor, writable = true)
       # (native code)
     end
@@ -379,6 +389,7 @@ module KyotoCabinet
     # @param key the key.
     # @param num the additional number.
     # @return the result value, or nil on failure.
+    # @note If no record corresponds to the key, a new record is created with the initial value set by the additional value.  The value is serialized as an 8-byte binary integer in big-endian order, not a decimal string.  If existing value is not 8-byte, this method fails.
     def increment(key, num = 0)
       # (native code)
     end
@@ -386,6 +397,7 @@ module KyotoCabinet
     # @param key the key.
     # @param num the additional number.
     # @return the result value, or nil on failure.
+    # @note If no record corresponds to the key, a new record is created with the initial value set by the additional value.  The value is serialized as an 16-byte binary fixed-point number in big-endian order, not a decimal string.  If existing value is not 16-byte, this method fails.
     def increment_double(key, num = 0)
       # (native code)
     end
@@ -408,6 +420,27 @@ module KyotoCabinet
     # @param key the key.
     # @return the value of the corresponding record, or nil on failure.
     def get(key)
+      # (native code)
+    end
+    # Store records at once.
+    # @param recs a hash of the records to store.
+    # @param atomic true to perform all operations atomically, or false for non-atomic operations.
+    # @return the number of stored records, or -1 on failure.
+    def set_bulk(recs, atomic = true)
+      # (native code)
+    end
+    # Remove records at once.
+    # @param keys an array of the keys of the records to remove.
+    # @param atomic true to perform all operations atomically, or false for non-atomic operations.
+    # @return the number of removed records, or -1 on failure.
+    def remove_bulk(keys, atomic = true)
+      # (native code)
+    end
+    # Retrieve records at once.
+    # @param keys an array of the keys of the records to retrieve.
+    # @param atomic true to perform all operations atomically, or false for non-atomic operations.
+    # @return a hash of retrieved records, or nil on failure.
+    def get_bulk(keys, atomic = true)
       # (native code)
     end
     # Remove all records.

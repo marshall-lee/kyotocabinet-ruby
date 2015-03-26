@@ -104,6 +104,7 @@ static VALUE db_error(VALUE vself);
 static VALUE db_open(int argc, VALUE* argv, VALUE vself);
 static VALUE db_close(VALUE vself);
 static VALUE db_accept(int argc, VALUE* argv, VALUE vself);
+static VALUE db_accept_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_iterate(int argc, VALUE* argv, VALUE vself);
 static VALUE db_set(VALUE vself, VALUE vkey, VALUE vvalue);
 static VALUE db_add(VALUE vself, VALUE vkey, VALUE vvalue);
@@ -114,6 +115,9 @@ static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself);
 static VALUE db_cas(VALUE vself, VALUE vkey, VALUE voval, VALUE vnval);
 static VALUE db_remove(VALUE vself, VALUE vkey);
 static VALUE db_get(VALUE vself, VALUE vkey);
+static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself);
+static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself);
+static VALUE db_get_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_clear(VALUE vself);
 static VALUE db_synchronize(int argc, VALUE* argv, VALUE vself);
 static VALUE db_copy(VALUE vself, VALUE vdest);
@@ -173,6 +177,7 @@ ID id_mtx_lock;
 ID id_mtx_unlock;
 ID id_obj_to_str;
 ID id_obj_to_s;
+ID id_hash_keys;
 ID id_err_code;
 ID id_err_message;
 ID id_vis_magic;
@@ -582,6 +587,7 @@ private:
  */
 class NativeFunction {
 public:
+  virtual ~NativeFunction() {}
   virtual void operate() = 0;
   static void execute(NativeFunction* func) {
 #if defined(_KC_YARV_)
@@ -749,6 +755,7 @@ static void define_module() {
   id_mtx_unlock = rb_intern("unlock");
   id_obj_to_str = rb_intern("to_str");
   id_obj_to_s = rb_intern("to_s");
+  id_hash_keys = rb_intern("keys");
 }
 
 
@@ -786,7 +793,7 @@ static VALUE kc_atoix(VALUE vself, VALUE vstr) {
 static VALUE kc_atof(VALUE vself, VALUE vstr) {
   vstr = StringValueEx(vstr);
   double num = kc::atof(RSTRING_PTR(vstr));
-  return DBL2NUM(num);
+  return rb_float_new(num);
 }
 
 
@@ -1207,7 +1214,6 @@ static VALUE cur_set_value(int argc, VALUE* argv, VALUE vself) {
   const char* vbuf = RSTRING_PTR(vvalue);
   size_t vsiz = RSTRING_LEN(vvalue);
   bool step = vstep != Qnil && vstep != Qfalse;
-
   bool rv;
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
@@ -1816,6 +1822,7 @@ static void define_db() {
   rb_define_method(cls_db, "open", (METHOD)db_open, -1);
   rb_define_method(cls_db, "close", (METHOD)db_close, 0);
   rb_define_method(cls_db, "accept", (METHOD)db_accept, -1);
+  rb_define_method(cls_db, "accept_bulk", (METHOD)db_accept_bulk, -1);
   rb_define_method(cls_db, "iterate", (METHOD)db_iterate, -1);
   rb_define_method(cls_db, "set", (METHOD)db_set, 2);
   rb_define_method(cls_db, "add", (METHOD)db_add, 2);
@@ -1826,6 +1833,9 @@ static void define_db() {
   rb_define_method(cls_db, "cas", (METHOD)db_cas, 3);
   rb_define_method(cls_db, "remove", (METHOD)db_remove, 1);
   rb_define_method(cls_db, "get", (METHOD)db_get, 1);
+  rb_define_method(cls_db, "set_bulk", (METHOD)db_set_bulk, -1);
+  rb_define_method(cls_db, "remove_bulk", (METHOD)db_remove_bulk, -1);
+  rb_define_method(cls_db, "get_bulk", (METHOD)db_get_bulk, -1);
   rb_define_method(cls_db, "clear", (METHOD)db_clear, 0);
   rb_define_method(cls_db, "synchronize", (METHOD)db_synchronize, -1);
   rb_define_method(cls_db, "copy", (METHOD)db_copy, 1);
@@ -2072,6 +2082,75 @@ static VALUE db_accept(int argc, VALUE* argv, VALUE vself) {
     }
     rb_funcall(vmutex, id_mtx_lock, 0);
     bool rv = db->accept(kbuf, ksiz, &visitor, writable);
+    const char *emsg = visitor.emsg();
+    if (emsg) {
+      db->set_error(kc::PolyDB::Error::LOGIC, emsg);
+      rv = false;
+    }
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+    if (rv) {
+      vrv = Qtrue;
+    } else {
+      vrv = Qfalse;
+      db_raise(vself);
+    }
+  }
+  return vrv;
+}
+
+
+/**
+ * Implementation of accept_bulk.
+ */
+static VALUE db_accept_bulk(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vkeys, vvisitor, vwritable;
+  rb_scan_args(argc, argv, "12", &vkeys, &vvisitor, &vwritable);
+  StringVector keys;
+  if (TYPE(vkeys) == T_ARRAY) {
+    int32_t knum = RARRAY_LEN(vkeys);
+    for (int32_t i = 0; i < knum; i++) {
+      volatile VALUE vkey = rb_ary_entry(vkeys, i);
+      vkey = StringValueEx(vkey);
+      keys.push_back(std::string(RSTRING_PTR(vkey), RSTRING_LEN(vkey)));
+    }
+  }
+  volatile VALUE vrv;
+  if (vvisitor == Qnil) {
+    bool writable = vwritable != Qfalse;
+    SoftBlockVisitor visitor(vself, writable);
+    volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+    if (vmutex == Qnil) {
+      db->set_error(kc::PolyDB::Error::INVALID, "unsupported method");
+      db_raise(vself);
+      return Qnil;
+    }
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    bool rv = db->accept_bulk(keys, &visitor, writable);
+    const char *emsg = visitor.emsg();
+    if (emsg) {
+      db->set_error(kc::PolyDB::Error::LOGIC, emsg);
+      rv = false;
+    }
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+    if (rv) {
+      vrv = Qtrue;
+    } else {
+      vrv = Qfalse;
+      db_raise(vself);
+    }
+  } else {
+    bool writable = vwritable != Qfalse;
+    SoftVisitor visitor(vself, vvisitor, writable);
+    volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+    if (vmutex == Qnil) {
+      db->set_error(kc::PolyDB::Error::INVALID, "unsupported method");
+      db_raise(vself);
+      return Qnil;
+    }
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    bool rv = db->accept_bulk(keys, &visitor, writable);
     const char *emsg = visitor.emsg();
     if (emsg) {
       db->set_error(kc::PolyDB::Error::LOGIC, emsg);
@@ -2629,6 +2708,168 @@ static VALUE db_get(VALUE vself, VALUE vkey) {
     db_raise(vself);
   }
   return vrv;
+}
+
+
+/**
+ * Implementation of set_bulk.
+ */
+static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vrecs, vatomic;
+  rb_scan_args(argc, argv, "11", &vrecs, &vatomic);
+  StringMap recs;
+  if (TYPE(vrecs) == T_HASH) {
+    VALUE vkeys = rb_funcall(vrecs, id_hash_keys, 0);
+    int32_t knum = RARRAY_LEN(vkeys);
+    for (int32_t i = 0; i < knum; i++) {
+      volatile VALUE vkey = rb_ary_entry(vkeys, i);
+      volatile VALUE vvalue = rb_hash_aref(vrecs, vkey);
+      vkey = StringValueEx(vkey);
+      vvalue = StringValueEx(vvalue);
+      recs[std::string(RSTRING_PTR(vkey), RSTRING_LEN(vkey))] =
+        std::string(RSTRING_PTR(vvalue), RSTRING_LEN(vvalue));
+    }
+  }
+  bool atomic = vatomic != Qfalse;
+  int64_t rv;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+    public:
+      explicit FuncImpl(kc::PolyDB* db, const StringMap* recs, bool atomic) :
+        db_(db), recs_(recs), atomic_(atomic), rv_(0) {}
+      int64_t rv() {
+        return rv_;
+      }
+    private:
+      void operate() {
+        rv_ = db_->set_bulk(*recs_, atomic_);
+      }
+      kc::PolyDB* db_;
+      const StringMap* recs_;
+      bool atomic_;
+      int64_t rv_;
+    } func(db, &recs, atomic);
+    NativeFunction::execute(&func);
+    rv = func.rv();
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    rv = db->set_bulk(recs, atomic);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  if (rv < 0) {
+    db_raise(vself);
+    return LL2NUM(-1);
+  }
+  return LL2NUM(rv);
+}
+
+
+/**
+ * Implementation of remove_bulk.
+ */
+static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vkeys, vatomic;
+  rb_scan_args(argc, argv, "11", &vkeys, &vatomic);
+  StringVector keys;
+  if (TYPE(vkeys) == T_ARRAY) {
+    int32_t knum = RARRAY_LEN(vkeys);
+    for (int32_t i = 0; i < knum; i++) {
+      volatile VALUE vkey = rb_ary_entry(vkeys, i);
+      vkey = StringValueEx(vkey);
+      keys.push_back(std::string(RSTRING_PTR(vkey), RSTRING_LEN(vkey)));
+    }
+  }
+  bool atomic = vatomic != Qfalse;
+  int64_t rv;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+    public:
+      explicit FuncImpl(kc::PolyDB* db, const StringVector* keys, bool atomic) :
+        db_(db), keys_(keys), atomic_(atomic), rv_(0) {}
+      int64_t rv() {
+        return rv_;
+      }
+    private:
+      void operate() {
+        rv_ = db_->remove_bulk(*keys_, atomic_);
+      }
+      kc::PolyDB* db_;
+      const StringVector* keys_;
+      bool atomic_;
+      int64_t rv_;
+    } func(db, &keys, atomic);
+    NativeFunction::execute(&func);
+    rv = func.rv();
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    rv = db->remove_bulk(keys, atomic);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  if (rv < 0) {
+    db_raise(vself);
+    return LL2NUM(-1);
+  }
+  return LL2NUM(rv);
+}
+
+
+/**
+ * Implementation of get_bulk.
+ */
+static VALUE db_get_bulk(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vkeys, vatomic;
+  rb_scan_args(argc, argv, "11", &vkeys, &vatomic);
+  StringVector keys;
+  if (TYPE(vkeys) == T_ARRAY) {
+    int32_t knum = RARRAY_LEN(vkeys);
+    for (int32_t i = 0; i < knum; i++) {
+      volatile VALUE vkey = rb_ary_entry(vkeys, i);
+      vkey = StringValueEx(vkey);
+      keys.push_back(std::string(RSTRING_PTR(vkey), RSTRING_LEN(vkey)));
+    }
+  }
+  bool atomic = vatomic != Qfalse;
+  StringMap recs;
+  int64_t rv;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+    public:
+      explicit FuncImpl(kc::PolyDB* db, const StringVector* keys, StringMap* recs, bool atomic) :
+        db_(db), keys_(keys), recs_(recs), atomic_(atomic), rv_(0) {}
+      int64_t rv() {
+        return rv_;
+      }
+    private:
+      void operate() {
+        rv_ = db_->get_bulk(*keys_, recs_, atomic_);
+      }
+      kc::PolyDB* db_;
+      const StringVector* keys_;
+      StringMap* recs_;
+      bool atomic_;
+      int64_t rv_;
+    } func(db, &keys, &recs, atomic);
+    NativeFunction::execute(&func);
+    rv = func.rv();
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    rv = db->get_bulk(keys, &recs, atomic);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  if (rv < 0) {
+    db_raise(vself);
+    return Qnil;
+  }
+  return maptovhash(vself, &recs);
 }
 
 

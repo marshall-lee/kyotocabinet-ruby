@@ -890,6 +890,31 @@ def procmisc(path)
       }
       cur.step
     end
+    printf("accepting visitor in bulk:\n")
+    keys = []
+    for i in 1..10
+      keys.push(i)
+    end
+    if not db.accept_bulk(keys, db, true)
+      dberrprint(db, "DB::accept_bulk")
+      err = true
+    end
+    recs = {}
+    for i in 1..10
+      recs[i] = sprintf("[%d]", i)
+    end
+    if db.set_bulk(recs) < 0
+      dberrprint(db, "DB::set_bulk")
+      err = true
+    end
+    if not db.get_bulk(keys)
+      dberrprint(db, "DB::get_bulk")
+      err = true
+    end
+    if db.remove_bulk(keys) < 0
+      dberrprint(db, "DB::remove_bulk")
+      err = true
+    end
     printf("synchronizing the database:\n")
     def db.process(path, count, size)
       true
