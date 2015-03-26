@@ -87,6 +87,7 @@ static VALUE cur_remove(VALUE vself);
 static VALUE cur_get_key(int argc, VALUE* argv, VALUE vself);
 static VALUE cur_get_value(int argc, VALUE* argv, VALUE vself);
 static VALUE cur_get(int argc, VALUE* argv, VALUE vself);
+static VALUE cur_seize(VALUE vself);
 static VALUE cur_jump(int argc, VALUE* argv, VALUE vself);
 static VALUE cur_jump_back(int argc, VALUE* argv, VALUE vself);
 static VALUE cur_step(VALUE vself);
@@ -115,6 +116,7 @@ static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself);
 static VALUE db_cas(VALUE vself, VALUE vkey, VALUE voval, VALUE vnval);
 static VALUE db_remove(VALUE vself, VALUE vkey);
 static VALUE db_get(VALUE vself, VALUE vkey);
+static VALUE db_seize(VALUE vself, VALUE vkey);
 static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_get_bulk(int argc, VALUE* argv, VALUE vself);
@@ -1056,6 +1058,7 @@ static void define_cur() {
   rb_define_method(cls_cur, "get_key", (METHOD)cur_get_key, -1);
   rb_define_method(cls_cur, "get_value", (METHOD)cur_get_value, -1);
   rb_define_method(cls_cur, "get", (METHOD)cur_get, -1);
+  rb_define_method(cls_cur, "seize", (METHOD)cur_seize, 0);
   rb_define_method(cls_cur, "jump", (METHOD)cur_jump, -1);
   rb_define_method(cls_cur, "jump_back", (METHOD)cur_jump_back, -1);
   rb_define_method(cls_cur, "step", (METHOD)cur_step, 0);
@@ -1429,6 +1432,60 @@ static VALUE cur_get(int argc, VALUE* argv, VALUE vself) {
   } else {
     rb_funcall(vmutex, id_mtx_lock, 0);
     kbuf = cur->cur_->get(&ksiz, &vbuf, &vsiz, step);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  volatile VALUE vrv;
+  if (kbuf) {
+    volatile VALUE vkey = rb_str_new_ex(vdb, kbuf, ksiz);
+    volatile VALUE vvalue = rb_str_new_ex(vdb, vbuf, vsiz);
+    vrv = rb_ary_new3(2, vkey, vvalue);
+    delete[] kbuf;
+  } else {
+    vrv = Qnil;
+    db_raise(vdb);
+  }
+  return vrv;
+}
+
+
+/**
+ * Implementation of seize.
+ */
+static VALUE cur_seize(VALUE vself) {
+  volatile VALUE vdb = rb_ivar_get(vself, id_cur_db);
+  if (vdb == Qnil) return Qnil;
+  SoftCursor* cur;
+  Data_Get_Struct(vself, SoftCursor, cur);
+  char* kbuf;
+  const char* vbuf;
+  size_t ksiz, vsiz;
+  volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+     public:
+      explicit FuncImpl(kc::PolyDB::Cursor* cur) :
+          cur_(cur), kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
+      char* rv(size_t* ksp, const char** vbp, size_t* vsp) {
+        *ksp = ksiz_;
+        *vbp = vbuf_;
+        *vsp = vsiz_;
+        return kbuf_;
+      }
+     private:
+      void operate() {
+        kbuf_ = cur_->seize(&ksiz_, &vbuf_, &vsiz_);
+      }
+      kc::PolyDB::Cursor* cur_;
+      char* kbuf_;
+      size_t ksiz_;
+      const char* vbuf_;
+      size_t vsiz_;
+    } func(cur->cur_);
+    NativeFunction::execute(&func);
+    kbuf = func.rv(&ksiz, &vbuf, &vsiz);
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    kbuf = cur->cur_->seize(&ksiz, &vbuf, &vsiz);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
   volatile VALUE vrv;
@@ -1834,6 +1891,7 @@ static void define_db() {
   rb_define_method(cls_db, "cas", (METHOD)db_cas, 3);
   rb_define_method(cls_db, "remove", (METHOD)db_remove, 1);
   rb_define_method(cls_db, "get", (METHOD)db_get, 1);
+  rb_define_method(cls_db, "seize", (METHOD)db_seize, 1);
   rb_define_method(cls_db, "set_bulk", (METHOD)db_set_bulk, -1);
   rb_define_method(cls_db, "remove_bulk", (METHOD)db_remove_bulk, -1);
   rb_define_method(cls_db, "get_bulk", (METHOD)db_get_bulk, -1);
@@ -2765,6 +2823,56 @@ static VALUE db_get(VALUE vself, VALUE vkey) {
   } else {
     rb_funcall(vmutex, id_mtx_lock, 0);
     vbuf = db->get(kbuf, ksiz, &vsiz);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  volatile VALUE vrv;
+  if (vbuf) {
+    vrv = rb_str_new_ex(vself, vbuf, vsiz);
+    delete[] vbuf;
+  } else {
+    vrv = Qnil;
+    db_raise(vself);
+  }
+  return vrv;
+}
+
+
+/**
+ * Implementation of seize.
+ */
+static VALUE db_seize(VALUE vself, VALUE vkey) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  vkey = StringValueEx(vkey);
+  const char* kbuf = RSTRING_PTR(vkey);
+  size_t ksiz = RSTRING_LEN(vkey);
+  char* vbuf;
+  size_t vsiz;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+     public:
+      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz) :
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(NULL), vsiz_(0) {}
+      char* rv(size_t* vsp) {
+        *vsp = vsiz_;
+        return vbuf_;
+      }
+     private:
+      void operate() {
+        vbuf_ = db_->seize(kbuf_, ksiz_, &vsiz_);
+      }
+      kc::PolyDB* db_;
+      const char* kbuf_;
+      size_t ksiz_;
+      char* vbuf_;
+      size_t vsiz_;
+    } func(db, kbuf, ksiz);
+    NativeFunction::execute(&func);
+    vbuf = func.rv(&vsiz);
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    vbuf = db->seize(kbuf, ksiz, &vsiz);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
   volatile VALUE vrv;

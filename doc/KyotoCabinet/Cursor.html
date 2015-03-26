@@ -91,6 +91,8 @@
 					
 					<li><a href="#method-i-remove">#remove</a></li>
 					
+					<li><a href="#method-i-seize">#seize</a></li>
+					
 					<li><a href="#method-i-set_value">#set_value</a></li>
 					
 					<li><a href="#method-i-step">#step</a></li>
@@ -266,10 +268,10 @@ Get the database object.
 					<div class="method-source-code"
 						id="db-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 250</span>
-250:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">db</span>()
-251:       <span class="ruby-comment cmt"># (native code)</span>
-252:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 256</span>
+256:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">db</span>()
+257:       <span class="ruby-comment cmt"># (native code)</span>
+258:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -355,10 +357,10 @@ Get the last happened error.
 					<div class="method-source-code"
 						id="error-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 255</span>
-255:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">error</span>()
-256:       <span class="ruby-comment cmt"># (native code)</span>
-257:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 261</span>
+261:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">error</span>()
+262:       <span class="ruby-comment cmt"># (native code)</span>
+263:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -552,10 +554,10 @@ Get the inspection string.
 					<div class="method-source-code"
 						id="inspect-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 265</span>
-265:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>()
-266:       <span class="ruby-comment cmt"># (native code)</span>
-267:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 271</span>
+271:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>()
+272:       <span class="ruby-comment cmt"># (native code)</span>
+273:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -599,10 +601,10 @@ If it is nil, the destination is the first record.
 					<div class="method-source-code"
 						id="jump-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 227</span>
-227:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
-228:       <span class="ruby-comment cmt"># (native code)</span>
-229:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 233</span>
+233:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
+234:       <span class="ruby-comment cmt"># (native code)</span>
+235:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -652,10 +654,10 @@ implementation.
 					<div class="method-source-code"
 						id="jump-back-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 234</span>
-234:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump_back</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
-235:       <span class="ruby-comment cmt"># (native code)</span>
-236:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 240</span>
+240:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump_back</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
+241:       <span class="ruby-comment cmt"># (native code)</span>
+242:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -703,6 +705,55 @@ returned.  The cursor is moved to the next record implicitly.
 200:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remove</span>()
 201:       <span class="ruby-comment cmt"># (native code)</span>
 202:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="seize-method" class="method-detail ">
+				<a name="method-i-seize"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">seize</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get a pair of the key and the value of the current record and remove it
+atomically.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> a pair of the key and the value of the current
+record, or nil on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> If the cursor is invalidated, nil is returned.  The
+cursor is moved to the next record implicitly.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="seize-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 227</span>
+227:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">seize</span>()
+228:       <span class="ruby-comment cmt"># (native code)</span>
+229:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -792,10 +843,10 @@ Step the cursor to the next record.
 					<div class="method-source-code"
 						id="step-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 239</span>
-239:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step</span>()
-240:       <span class="ruby-comment cmt"># (native code)</span>
-241:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 245</span>
+245:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step</span>()
+246:       <span class="ruby-comment cmt"># (native code)</span>
+247:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -840,10 +891,10 @@ implementation.
 					<div class="method-source-code"
 						id="step-back-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 245</span>
-245:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step_back</span>()
-246:       <span class="ruby-comment cmt"># (native code)</span>
-247:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 251</span>
+251:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step_back</span>()
+252:       <span class="ruby-comment cmt"># (native code)</span>
+253:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -882,10 +933,10 @@ Get the string expression.
 					<div class="method-source-code"
 						id="to-s-source">
 <pre>
-     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 260</span>
-260:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>()
-261:       <span class="ruby-comment cmt"># (native code)</span>
-262:     <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 266</span>
+266:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>()
+267:       <span class="ruby-comment cmt"># (native code)</span>
+268:     <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>

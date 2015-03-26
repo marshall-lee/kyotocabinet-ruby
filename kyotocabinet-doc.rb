@@ -221,6 +221,12 @@ module KyotoCabinet
     def get(step = false)
       # (native code)
     end
+    # Get a pair of the key and the value of the current record and remove it atomically.
+    # @return a pair of the key and the value of the current record, or nil on failure.
+    # @note If the cursor is invalidated, nil is returned.  The cursor is moved to the next record implicitly.
+    def seize()
+      # (native code)
+    end
     # Jump the cursor to a record for forward scan.
     # @param key the key of the destination record.  If it is nil, the destination is the first record.
     # @return true on success, or false on failure.
@@ -422,6 +428,12 @@ module KyotoCabinet
     # @param key the key.
     # @return the value of the corresponding record, or nil on failure.
     def get(key)
+      # (native code)
+    end
+    # Retrieve the value of a record and remove it atomically.
+    # @param key the key.
+    # @return the value of the corresponding record, or nil on failure.
+    def seize(key)
       # (native code)
     end
     # Store records at once.
