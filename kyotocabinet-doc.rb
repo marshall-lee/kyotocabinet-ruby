@@ -388,17 +388,19 @@ module KyotoCabinet
     # Add a number to the numeric integer value of a record.
     # @param key the key.
     # @param num the additional number.
+    # @param orig the origin number if no record corresponds to the key.  If it is negative infinity and no record corresponds, this method fails.  If it is positive infinity, the value is set as the additional number regardless of the current value.
     # @return the result value, or nil on failure.
-    # @note If no record corresponds to the key, a new record is created with the initial value set by the additional value.  The value is serialized as an 8-byte binary integer in big-endian order, not a decimal string.  If existing value is not 8-byte, this method fails.
-    def increment(key, num = 0)
+    # @note The value is serialized as an 8-byte binary integer in big-endian order, not a decimal string.  If existing value is not 8-byte, this method fails.
+    def increment(key, num = 0, orig = 0)
       # (native code)
     end
     # Add a number to the numeric double value of a record.
     # @param key the key.
     # @param num the additional number.
+    # @param orig the origin number if no record corresponds to the key.  If it is negative infinity and no record corresponds, this method fails.  If it is positive infinity, the value is set as the additional number regardless of the current value.
     # @return the result value, or nil on failure.
-    # @note If no record corresponds to the key, a new record is created with the initial value set by the additional value.  The value is serialized as an 16-byte binary fixed-point number in big-endian order, not a decimal string.  If existing value is not 16-byte, this method fails.
-    def increment_double(key, num = 0)
+    # @note The value is serialized as an 16-byte binary fixed-point number in big-endian order, not a decimal string.  If existing value is not 16-byte, this method fails.
+    def increment_double(key, num = 0, orig = 0)
       # (native code)
     end
     # Perform compare-and-swap.

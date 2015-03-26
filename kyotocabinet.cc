@@ -212,9 +212,9 @@ enum GenericOption {
  * Burrow of cursors no longer in use.
  */
 class CursorBurrow {
-private:
+ private:
   typedef std::vector<kc::PolyDB::Cursor*> CursorList;
-public:
+ public:
   explicit CursorBurrow() : dcurs_() {}
   ~CursorBurrow() {
     sweap();
@@ -234,7 +234,7 @@ public:
   void deposit(kc::PolyDB::Cursor* cur) {
     dcurs_.push_back(cur);
   }
-private:
+ private:
   CursorList dcurs_;
 } g_curbur;
 
@@ -255,13 +255,13 @@ struct SoftCursor {
  * Wrapper of a visitor.
  */
 class SoftVisitor : public kc::PolyDB::Visitor {
-public:
+ public:
   explicit SoftVisitor(VALUE vdb, VALUE vvisitor, bool writable) :
-    vdb_(vdb), vvisitor_(vvisitor), writable_(writable), emsg_(NULL) {}
+      vdb_(vdb), vvisitor_(vvisitor), writable_(writable), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   const char* visit_full(const char* kbuf, size_t ksiz,
                          const char* vbuf, size_t vsiz, size_t* sp) {
     volatile VALUE vkey = rb_str_new_ex(vdb_, kbuf, ksiz);
@@ -354,13 +354,13 @@ private:
  * Wrapper of a visitor of the block paramter.
  */
 class SoftBlockVisitor : public kc::PolyDB::Visitor {
-public:
+ public:
   explicit SoftBlockVisitor(VALUE vdb, bool writable) :
-    vdb_(vdb), writable_(writable), emsg_(NULL) {}
+      vdb_(vdb), writable_(writable), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   const char* visit_full(const char* kbuf, size_t ksiz,
                          const char* vbuf, size_t vsiz, size_t* sp) {
     volatile VALUE vkey = rb_str_new_ex(vdb_, kbuf, ksiz);
@@ -444,12 +444,12 @@ private:
  * Wrapper of a visitor for the each method.
  */
 class SoftEachVisitor : public kc::PolyDB::Visitor {
-public:
+ public:
   explicit SoftEachVisitor(VALUE vdb) : vdb_(vdb), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   const char* visit_full(const char* kbuf, size_t ksiz,
                          const char* vbuf, size_t vsiz, size_t* sp) {
     volatile VALUE vkey = rb_str_new_ex(vdb_, kbuf, ksiz);
@@ -472,12 +472,12 @@ private:
  * Wrapper of a visitor for the each_key method.
  */
 class SoftEachKeyVisitor : public kc::PolyDB::Visitor {
-public:
+ public:
   explicit SoftEachKeyVisitor(VALUE vdb) : vdb_(vdb), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   const char* visit_full(const char* kbuf, size_t ksiz,
                          const char* vbuf, size_t vsiz, size_t* sp) {
     volatile VALUE vkey = rb_str_new_ex(vdb_, kbuf, ksiz);
@@ -499,12 +499,12 @@ private:
  * Wrapper of a visitor for the each_value method.
  */
 class SoftEachValueVisitor : public kc::PolyDB::Visitor {
-public:
+ public:
   explicit SoftEachValueVisitor(VALUE vdb) : vdb_(vdb), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   const char* visit_full(const char* kbuf, size_t ksiz,
                          const char* vbuf, size_t vsiz, size_t* sp) {
     volatile VALUE vvalue = rb_str_new_ex(vdb_, vbuf, vsiz);
@@ -526,12 +526,12 @@ private:
  * Wrapper of a file processor.
  */
 class SoftFileProcessor : public kc::PolyDB::FileProcessor {
-public:
+ public:
   explicit SoftFileProcessor(VALUE vdb, VALUE vproc) : vdb_(vdb), vproc_(vproc), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   bool process(const std::string& path, int64_t count, int64_t size) {
     volatile VALUE vpath = rb_str_new_ex2(vdb_, path.c_str());
     volatile VALUE vcount = LL2NUM(count);
@@ -559,12 +559,12 @@ private:
  * Wrapper of a file processor of the block parameter.
  */
 class SoftBlockFileProcessor : public kc::PolyDB::FileProcessor {
-public:
+ public:
   explicit SoftBlockFileProcessor(VALUE vdb) : vdb_(vdb), emsg_(NULL) {}
   const char* emsg() {
     return emsg_;
   }
-private:
+ private:
   bool process(const std::string& path, int64_t count, int64_t size) {
     volatile VALUE vpath = rb_str_new_ex2(vdb_, path.c_str());
     volatile VALUE vcount = LL2NUM(count);
@@ -587,7 +587,7 @@ private:
  * Wrapper of a native function.
  */
 class NativeFunction {
-public:
+ public:
   virtual ~NativeFunction() {}
   virtual void operate() = 0;
   static void execute(NativeFunction* func) {
@@ -597,7 +597,7 @@ public:
     func->operate();
 #endif
   }
-private:
+ private:
   static VALUE execute_impl(void* ptr) {
     NativeFunction* func = (NativeFunction*)ptr;
     func->operate();
@@ -960,7 +960,7 @@ static VALUE err_op_eq(VALUE vself, VALUE vright) {
   if (TYPE(vright) == T_FIXNUM)
     return NUM2INT(rb_ivar_get(vself, id_err_code)) == FIX2INT(vright) ? Qtrue : Qfalse;
   return NUM2INT(rb_ivar_get(vself, id_err_code)) == NUM2INT(rb_ivar_get(vright, id_err_code)) ?
-    Qtrue : Qfalse;
+      Qtrue : Qfalse;
 }
 
 
@@ -972,7 +972,7 @@ static VALUE err_op_ne(VALUE vself, VALUE vright) {
   if (TYPE(vright) == T_FIXNUM)
     return NUM2INT(rb_ivar_get(vself, id_err_code)) != FIX2INT(vright) ? Qtrue : Qfalse;
   return NUM2INT(rb_ivar_get(vself, id_err_code)) != NUM2INT(rb_ivar_get(vright, id_err_code)) ?
-    Qtrue : Qfalse;
+      Qtrue : Qfalse;
 }
 
 
@@ -1219,13 +1219,13 @@ static VALUE cur_set_value(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur, const char* vbuf, size_t vsiz, bool step) :
-        cur_(cur), vbuf_(vbuf), vsiz_(vsiz), step_(step), rv_(false) {}
+          cur_(cur), vbuf_(vbuf), vsiz_(vsiz), step_(step), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = cur_->set_value(vbuf_, vsiz_, step_);
       }
@@ -1260,12 +1260,12 @@ static VALUE cur_remove(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur) : cur_(cur), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = cur_->remove();
       }
@@ -1301,14 +1301,14 @@ static VALUE cur_get_key(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur, bool step) :
-        cur_(cur), step_(step), kbuf_(NULL), ksiz_(0) {}
+          cur_(cur), step_(step), kbuf_(NULL), ksiz_(0) {}
       char* rv(size_t* ksp) {
         *ksp = ksiz_;
         return kbuf_;
       }
-    private:
+     private:
       void operate() {
         kbuf_ = cur_->get_key(&ksiz_, step_);
       }
@@ -1352,14 +1352,14 @@ static VALUE cur_get_value(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur, bool step) :
-        cur_(cur), step_(step), vbuf_(NULL), vsiz_(0) {}
+          cur_(cur), step_(step), vbuf_(NULL), vsiz_(0) {}
       char* rv(size_t* vsp) {
         *vsp = vsiz_;
         return vbuf_;
       }
-    private:
+     private:
       void operate() {
         vbuf_ = cur_->get_value(&vsiz_, step_);
       }
@@ -1404,16 +1404,16 @@ static VALUE cur_get(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur, bool step) :
-        cur_(cur), step_(step), kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
+          cur_(cur), step_(step), kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
       char* rv(size_t* ksp, const char** vbp, size_t* vsp) {
         *ksp = ksiz_;
         *vbp = vbuf_;
         *vsp = vsiz_;
         return kbuf_;
       }
-    private:
+     private:
       void operate() {
         kbuf_ = cur_->get(&ksiz_, &vbuf_, &vsiz_, step_);
       }
@@ -1461,12 +1461,12 @@ static VALUE cur_jump(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB::Cursor* cur) : cur_(cur), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = cur_->jump();
         }
@@ -1494,13 +1494,13 @@ static VALUE cur_jump(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB::Cursor* cur, const char*kbuf, size_t ksiz) :
-          cur_(cur), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
+            cur_(cur), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = cur_->jump(kbuf_, ksiz_);
         }
@@ -1543,12 +1543,12 @@ static VALUE cur_jump_back(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB::Cursor* cur) : cur_(cur), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = cur_->jump_back();
         }
@@ -1576,13 +1576,13 @@ static VALUE cur_jump_back(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB::Cursor* cur, const char*kbuf, size_t ksiz) :
-          cur_(cur), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
+            cur_(cur), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = cur_->jump_back(kbuf_, ksiz_);
         }
@@ -1621,12 +1621,12 @@ static VALUE cur_step(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur) : cur_(cur), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = cur_->step();
       }
@@ -1658,12 +1658,12 @@ static VALUE cur_step_back(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vdb, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB::Cursor* cur) : cur_(cur), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = cur_->step_back();
       }
@@ -1973,13 +1973,13 @@ static VALUE db_open(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* path, uint32_t mode) :
-        db_(db), path_(path), mode_(mode), rv_(false) {}
+          db_(db), path_(path), mode_(mode), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->open(path_, mode_);
       }
@@ -2011,12 +2011,12 @@ static VALUE db_close(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db) : db_(db), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         g_curbur.sweap();
         rv_ = db_->close();
@@ -2246,14 +2246,14 @@ static VALUE db_set(VALUE vself, VALUE vkey, VALUE vvalue) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
                         const char* vbuf, size_t vsiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->set(kbuf_, ksiz_, vbuf_, vsiz_);
       }
@@ -2293,14 +2293,14 @@ static VALUE db_add(VALUE vself, VALUE vkey, VALUE vvalue) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
                         const char* vbuf, size_t vsiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->add(kbuf_, ksiz_, vbuf_, vsiz_);
       }
@@ -2340,14 +2340,14 @@ static VALUE db_replace(VALUE vself, VALUE vkey, VALUE vvalue) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
                         const char* vbuf, size_t vsiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->replace(kbuf_, ksiz_, vbuf_, vsiz_);
       }
@@ -2387,14 +2387,14 @@ static VALUE db_append(VALUE vself, VALUE vkey, VALUE vvalue) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
                         const char* vbuf, size_t vsiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(vbuf), vsiz_(vsiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->append(kbuf_, ksiz_, vbuf_, vsiz_);
       }
@@ -2424,8 +2424,8 @@ static VALUE db_append(VALUE vself, VALUE vkey, VALUE vvalue) {
 static VALUE db_increment(int argc, VALUE* argv, VALUE vself) {
   kc::PolyDB* db;
   Data_Get_Struct(vself, kc::PolyDB, db);
-  volatile VALUE vkey, vnum;
-  rb_scan_args(argc, argv, "11", &vkey, &vnum);
+  volatile VALUE vkey, vnum, vorig;
+  rb_scan_args(argc, argv, "12", &vkey, &vnum, &vorig);
   vkey = StringValueEx(vkey);
   const char* kbuf = RSTRING_PTR(vkey);
   size_t ksiz = RSTRING_LEN(vkey);
@@ -2453,30 +2453,70 @@ static VALUE db_increment(int argc, VALUE* argv, VALUE vself) {
       break;
     }
   }
+  int64_t orig = 0;
+  switch (TYPE(vorig)) {
+    case T_FIXNUM: {
+      orig = FIX2INT(vorig);
+      break;
+    }
+    case T_BIGNUM: {
+      orig = NUM2LL(vorig);
+      break;
+    }
+    case T_FLOAT: {
+      double dnum = NUM2DBL(vorig);
+      if (kc::chknan(dnum)) {
+        orig = kc::INT64MIN;
+      } else if (kc::chkinf(dnum)) {
+        orig = dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
+      } else {
+        orig = dnum;
+      }
+      break;
+    }
+    case T_TRUE: {
+      orig = 1;
+      break;
+    }
+    case T_STRING: {
+      const char* str = RSTRING_PTR(vorig);
+      double dnum = kc::atof(str);
+      if (kc::chknan(dnum)) {
+        orig = kc::INT64MIN;
+      } else if (kc::chkinf(dnum)) {
+        orig = dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
+      } else {
+        orig = dnum;
+      }
+      break;
+    }
+  }
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
-      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz, int64_t num) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), num_(num) {}
+     public:
+      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
+                        int64_t num, int64_t orig) :
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), num_(num), orig_(orig) {}
       int64_t rv() {
         return num_;
       }
-    private:
+     private:
       void operate() {
-        num_ = db_->increment(kbuf_, ksiz_, num_);
+        num_ = db_->increment(kbuf_, ksiz_, num_, orig_);
       }
       kc::PolyDB* db_;
       const char* kbuf_;
       size_t ksiz_;
       int64_t num_;
-    } func(db, kbuf, ksiz, num);
+      int64_t orig_;
+    } func(db, kbuf, ksiz, num, orig);
     NativeFunction::execute(&func);
     num = func.rv();
   } else {
     rb_funcall(vmutex, id_mtx_lock, 0);
-    num = db->increment(kbuf, ksiz, num);
+    num = db->increment(kbuf, ksiz, num, orig);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
   if (num == kc::INT64MIN) {
@@ -2495,8 +2535,8 @@ static VALUE db_increment(int argc, VALUE* argv, VALUE vself) {
 static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself) {
   kc::PolyDB* db;
   Data_Get_Struct(vself, kc::PolyDB, db);
-  volatile VALUE vkey, vnum;
-  rb_scan_args(argc, argv, "11", &vkey, &vnum);
+  volatile VALUE vkey, vnum, vorig;
+  rb_scan_args(argc, argv, "12", &vkey, &vnum, &vorig);
   vkey = StringValueEx(vkey);
   const char* kbuf = RSTRING_PTR(vkey);
   size_t ksiz = RSTRING_LEN(vkey);
@@ -2524,30 +2564,56 @@ static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself) {
       break;
     }
   }
+  double orig = 0;
+  switch (TYPE(vorig)) {
+    case T_FIXNUM: {
+      orig = FIX2INT(vorig);
+      break;
+    }
+    case T_BIGNUM: {
+      orig = NUM2LL(vorig);
+      break;
+    }
+    case T_FLOAT: {
+      orig = NUM2DBL(vorig);
+      break;
+    }
+    case T_TRUE: {
+      orig = 1;
+      break;
+    }
+    case T_STRING: {
+      const char* str = RSTRING_PTR(vorig);
+      orig = kc::atof(str);
+      break;
+    }
+  }
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
-      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz, double num) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), num_(num) {}
+     public:
+      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
+                        double num, double orig) :
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), num_(num), orig_(orig) {}
       double rv() {
         return num_;
       }
-    private:
+     private:
       void operate() {
-        num_ = db_->increment_double(kbuf_, ksiz_, num_);
+        num_ = db_->increment_double(kbuf_, ksiz_, num_, orig_);
       }
       kc::PolyDB* db_;
       const char* kbuf_;
       size_t ksiz_;
       double num_;
-    } func(db, kbuf, ksiz, num);
+      double orig_;
+    } func(db, kbuf, ksiz, num, orig);
     NativeFunction::execute(&func);
     num = func.rv();
   } else {
     rb_funcall(vmutex, id_mtx_lock, 0);
-    num = db->increment_double(kbuf, ksiz, num);
+    num = db->increment_double(kbuf, ksiz, num, orig);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
   if (kc::chknan(num)) {
@@ -2588,15 +2654,15 @@ static VALUE db_cas(VALUE vself, VALUE vkey, VALUE voval, VALUE vnval) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz,
                         const char* ovbuf, size_t ovsiz, const char* nvbuf, size_t nvsiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz),
-        ovbuf_(ovbuf), ovsiz_(ovsiz), nvbuf_(nvbuf), nvsiz_(nvsiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz),
+          ovbuf_(ovbuf), ovsiz_(ovsiz), nvbuf_(nvbuf), nvsiz_(nvsiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->cas(kbuf_, ksiz_, ovbuf_, ovsiz_, nvbuf_, nvsiz_);
       }
@@ -2635,13 +2701,13 @@ static VALUE db_remove(VALUE vself, VALUE vkey) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->remove(kbuf_, ksiz_);
       }
@@ -2677,14 +2743,14 @@ static VALUE db_get(VALUE vself, VALUE vkey) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz) :
-        db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(NULL), vsiz_(0) {}
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vbuf_(NULL), vsiz_(0) {}
       char* rv(size_t* vsp) {
         *vsp = vsiz_;
         return vbuf_;
       }
-    private:
+     private:
       void operate() {
         vbuf_ = db_->get(kbuf_, ksiz_, &vsiz_);
       }
@@ -2731,7 +2797,7 @@ static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself) {
       vkey = StringValueEx(vkey);
       vvalue = StringValueEx(vvalue);
       recs[std::string(RSTRING_PTR(vkey), RSTRING_LEN(vkey))] =
-        std::string(RSTRING_PTR(vvalue), RSTRING_LEN(vvalue));
+          std::string(RSTRING_PTR(vvalue), RSTRING_LEN(vvalue));
     }
   }
   bool atomic = vatomic != Qfalse;
@@ -2739,13 +2805,13 @@ static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const StringMap* recs, bool atomic) :
-        db_(db), recs_(recs), atomic_(atomic), rv_(0) {}
+          db_(db), recs_(recs), atomic_(atomic), rv_(0) {}
       int64_t rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->set_bulk(*recs_, atomic_);
       }
@@ -2791,13 +2857,13 @@ static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const StringVector* keys, bool atomic) :
-        db_(db), keys_(keys), atomic_(atomic), rv_(0) {}
+          db_(db), keys_(keys), atomic_(atomic), rv_(0) {}
       int64_t rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->remove_bulk(*keys_, atomic_);
       }
@@ -2844,13 +2910,13 @@ static VALUE db_get_bulk(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const StringVector* keys, StringMap* recs, bool atomic) :
-        db_(db), keys_(keys), recs_(recs), atomic_(atomic), rv_(0) {}
+          db_(db), keys_(keys), recs_(recs), atomic_(atomic), rv_(0) {}
       int64_t rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->get_bulk(*keys_, recs_, atomic_);
       }
@@ -2885,12 +2951,12 @@ static VALUE db_clear(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db) : db_(db), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->clear();
       }
@@ -2969,12 +3035,12 @@ static VALUE db_synchronize(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB* db, bool hard) : db_(db), hard_(hard), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = db_->synchronize(hard_, NULL);
         }
@@ -3059,13 +3125,13 @@ static VALUE db_occupy(int argc, VALUE* argv, VALUE vself) {
     volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
     if (vmutex == Qnil) {
       class FuncImpl : public NativeFunction {
-      public:
+       public:
         explicit FuncImpl(kc::PolyDB* db, bool writable) :
-          db_(db), writable_(writable), rv_(false) {}
+            db_(db), writable_(writable), rv_(false) {}
         bool rv() {
           return rv_;
         }
-      private:
+       private:
         void operate() {
           rv_ = db_->occupy(writable_, NULL);
         }
@@ -3103,12 +3169,12 @@ static VALUE db_copy(VALUE vself, VALUE vdest) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* dest) : db_(db), dest_(dest), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->copy(dest_);
       }
@@ -3239,12 +3305,12 @@ static VALUE db_dump_snapshot(VALUE vself, VALUE vdest) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* dest) : db_(db), dest_(dest), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->dump_snapshot(dest_);
       }
@@ -3277,12 +3343,12 @@ static VALUE db_load_snapshot(VALUE vself, VALUE vsrc) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* src) : db_(db), src_(src), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->load_snapshot(src_);
       }
@@ -3429,14 +3495,14 @@ static VALUE db_match_prefix(int argc, VALUE* argv, VALUE vself) {
   int64_t rv;
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* pbuf, size_t psiz,
                         StringVector* keys, int64_t max) :
-        db_(db), pbuf_(pbuf), psiz_(psiz), keys_(keys), max_(max), rv_(0) {}
+          db_(db), pbuf_(pbuf), psiz_(psiz), keys_(keys), max_(max), rv_(0) {}
       int64_t rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->match_prefix(std::string(pbuf_, psiz_), keys_, max_);
       }
@@ -3505,14 +3571,14 @@ static VALUE db_match_regex(int argc, VALUE* argv, VALUE vself) {
   int64_t rv;
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, const char* rbuf, size_t rsiz,
                         StringVector* keys, int64_t max) :
-        db_(db), rbuf_(rbuf), rsiz_(rsiz), keys_(keys), max_(max), rv_(0) {}
+          db_(db), rbuf_(rbuf), rsiz_(rsiz), keys_(keys), max_(max), rv_(0) {}
       int64_t rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->match_regex(std::string(rbuf_, rsiz_), keys_, max_);
       }
@@ -3566,13 +3632,13 @@ static VALUE db_merge(int argc, VALUE* argv, VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db, kc::BasicDB** srcary, size_t srcnum, uint32_t mode) :
-        db_(db), srcary_(srcary), srcnum_(srcnum), mode_(mode), rv_(false) {}
+          db_(db), srcary_(srcary), srcnum_(srcnum), mode_(mode), rv_(false) {}
       bool rv() {
         return rv_;
       }
-    private:
+     private:
       void operate() {
         rv_ = db_->merge(srcary_, srcnum_, (kc::PolyDB::MergeMode)mode_);
       }
@@ -3746,16 +3812,16 @@ static VALUE db_shift(VALUE vself) {
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
     class FuncImpl : public NativeFunction {
-    public:
+     public:
       explicit FuncImpl(kc::PolyDB* db) :
-        db_(db), kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
+          db_(db), kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
       char* rv(size_t* ksp, const char** vbp, size_t* vsp) {
         *ksp = ksiz_;
         *vbp = vbuf_;
         *vsp = vsiz_;
         return kbuf_;
       }
-    private:
+     private:
       void operate() {
         kbuf_ = db_shift_impl(db_, &ksiz_, &vbuf_, &vsiz_);
       }
@@ -3790,7 +3856,7 @@ static char* db_shift_impl(kc::PolyDB* db, size_t* ksp, const char** vbp, size_t
   kc::PolyDB::Cursor cur(db);
   if (!cur.jump()) return NULL;
   class VisitorImpl : public kc::PolyDB::Visitor {
-  public:
+   public:
     explicit VisitorImpl() : kbuf_(NULL), ksiz_(0), vbuf_(NULL), vsiz_(0) {}
     char* rv(size_t* ksp, const char** vbp, size_t* vsp) {
       *ksp = ksiz_;
@@ -3798,7 +3864,7 @@ static char* db_shift_impl(kc::PolyDB* db, size_t* ksp, const char** vbp, size_t
       *vsp = vsiz_;
       return kbuf_;
     }
-  private:
+   private:
     const char* visit_full(const char* kbuf, size_t ksiz,
                            const char* vbuf, size_t vsiz, size_t* sp) {
       size_t rsiz = ksiz + 1 + vsiz + 1;

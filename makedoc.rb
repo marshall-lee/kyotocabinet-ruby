@@ -35,11 +35,11 @@ IO::popen("find doc") { |list|
   }
 }
 
-File::open("doc/rdoc-style.css", "a") { |file|
+File::open("doc/rdoc.css", "a") { |file|
   file.printf("\n")
   file.printf("pre { background: none #ddddee; border: solid 1px #dddddd; }\n")
-  file.printf("#methods ul { margin: -0.8ex 0ex 1ex 2ex; padding: 0px; color: #222222; }\n")
-  file.printf("#methods ul li { list-style-type: none; }\n")
+  file.printf(".method-description ul { margin: 0ex 0ex 1ex 2ex; padding: 0ex; }\n")
+  file.printf(".method-description ul li { list-style-type: none; }\n")
 }
 
 system("rm -f kyotocabinet.rb")

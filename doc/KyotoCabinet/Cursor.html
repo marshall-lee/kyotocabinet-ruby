@@ -1,0 +1,918 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: KyotoCabinet::Cursor</title>
+
+	<link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+
+	<script src="../js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="../js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="home-metadata">
+			<div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#classes">Classes</a>
+          <a href="../index.html#methods">Methods</a>
+        </h3>
+			</div>
+		</div>
+
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="../kyotocabinet_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="kyotocabinet.rb">kyotocabinet.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link">Object</p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#method-i-accept">#accept</a></li>
+					
+					<li><a href="#method-i-db">#db</a></li>
+					
+					<li><a href="#method-i-disable">#disable</a></li>
+					
+					<li><a href="#method-i-error">#error</a></li>
+					
+					<li><a href="#method-i-get">#get</a></li>
+					
+					<li><a href="#method-i-get_key">#get_key</a></li>
+					
+					<li><a href="#method-i-get_value">#get_value</a></li>
+					
+					<li><a href="#method-i-inspect">#inspect</a></li>
+					
+					<li><a href="#method-i-jump">#jump</a></li>
+					
+					<li><a href="#method-i-jump_back">#jump_back</a></li>
+					
+					<li><a href="#method-i-remove">#remove</a></li>
+					
+					<li><a href="#method-i-set_value">#set_value</a></li>
+					
+					<li><a href="#method-i-step">#step</a></li>
+					
+					<li><a href="#method-i-step_back">#step_back</a></li>
+					
+					<li><a href="#method-i-to_s">#to_s</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="../images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="../KyotoCabinet.html">KyotoCabinet</a></li>
+				
+					<li><a href="../KyotoCabinet/Cursor.html">KyotoCabinet::Cursor</a></li>
+				
+					<li><a href="../KyotoCabinet/DB.html">KyotoCabinet::DB</a></li>
+				
+					<li><a href="../KyotoCabinet/Error.html">KyotoCabinet::Error</a></li>
+				
+					<li><a href="../KyotoCabinet/FileProcessor.html">KyotoCabinet::FileProcessor</a></li>
+				
+					<li><a href="../KyotoCabinet/Visitor.html">KyotoCabinet::Visitor</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">KyotoCabinet::Cursor</h1>
+
+		<div id="description">
+			<p>
+Interface of cursor to indicate a record.
+</p>
+
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="accept-method" class="method-detail ">
+				<a name="method-i-accept"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">accept</span><span
+						class="method-args">(visitor, writable = true, step = false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Accept a visitor to the current record.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>visitor</var></strong> a visitor object which
+implements the <a href="Visitor.html">Visitor</a> interface.  If it is
+omitted, the block parameter is evaluated.
+</p>
+</li>
+<li><p>
+<strong>@param <var>writable</var></strong> true for writable operation, or
+false for read-only operation.
+</p>
+</li>
+<li><p>
+<strong>@param <var>step</var></strong> true to move the cursor to the next
+record, or false for no move.
+</p>
+</li>
+<li><p>
+<strong>@block</strong> If it is specified, the block is called as the
+visitor.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> The operation for each record is performed
+atomically and other threads accessing the same record are blocked.  To
+avoid deadlock, any explicit database operation must not be performed in
+this method.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="accept-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 187</span>
+187:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">accept</span>(<span class="ruby-identifier">visitor</span>, <span class="ruby-identifier">writable</span> = <span class="ruby-keyword kw">true</span>, <span class="ruby-identifier">step</span> = <span class="ruby-keyword kw">false</span>)
+188:       <span class="ruby-comment cmt"># (native code)</span>
+189:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="db-method" class="method-detail ">
+				<a name="method-i-db"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">db</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the database object.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> the database object.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="db-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 250</span>
+250:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">db</span>()
+251:       <span class="ruby-comment cmt"># (native code)</span>
+252:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="disable-method" class="method-detail ">
+				<a name="method-i-disable"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">disable</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Disable the cursor.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> always nil.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> This method should be called explicitly when the
+cursor is no longer in use.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="disable-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 177</span>
+177:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">disable</span>()
+178:       <span class="ruby-comment cmt"># (native code)</span>
+179:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="error-method" class="method-detail ">
+				<a name="method-i-error"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">error</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the last happened error.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> the last happened error.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="error-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 255</span>
+255:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">error</span>()
+256:       <span class="ruby-comment cmt"># (native code)</span>
+257:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="get-method" class="method-detail ">
+				<a name="method-i-get"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">get</span><span
+						class="method-args">(step = false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get a pair of the key and the value of the current record.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>step</var></strong> true to move the cursor to the next
+record, or false for no move.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> a pair of the key and the value of the current
+record, or nil on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> If the cursor is invalidated, nil is returned.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="get-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 221</span>
+221:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get</span>(<span class="ruby-identifier">step</span> = <span class="ruby-keyword kw">false</span>)
+222:       <span class="ruby-comment cmt"># (native code)</span>
+223:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="get-key-method" class="method-detail ">
+				<a name="method-i-get_key"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">get_key</span><span
+						class="method-args">(step = false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the key of the current record.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>step</var></strong> true to move the cursor to the next
+record, or false for no move.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> the key of the current record, or nil on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> If the cursor is invalidated, nil is returned.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="get-key-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 207</span>
+207:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_key</span>(<span class="ruby-identifier">step</span> = <span class="ruby-keyword kw">false</span>)
+208:       <span class="ruby-comment cmt"># (native code)</span>
+209:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="get-value-method" class="method-detail ">
+				<a name="method-i-get_value"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">get_value</span><span
+						class="method-args">(step = false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the value of the current record.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>step</var></strong> true to move the cursor to the next
+record, or false for no move.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> the value of the current record, or nil on
+failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> If the cursor is invalidated, nil is returned.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="get-value-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 214</span>
+214:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">step</span> = <span class="ruby-keyword kw">false</span>)
+215:       <span class="ruby-comment cmt"># (native code)</span>
+216:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="inspect-method" class="method-detail ">
+				<a name="method-i-inspect"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">inspect</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the inspection string.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> the inspection string.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="inspect-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 265</span>
+265:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">inspect</span>()
+266:       <span class="ruby-comment cmt"># (native code)</span>
+267:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="jump-method" class="method-detail ">
+				<a name="method-i-jump"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">jump</span><span
+						class="method-args">(key = nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Jump the cursor to a record for forward scan.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>key</var></strong> the key of the destination record. 
+If it is nil, the destination is the first record.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="jump-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 227</span>
+227:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
+228:       <span class="ruby-comment cmt"># (native code)</span>
+229:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="jump-back-method" class="method-detail ">
+				<a name="method-i-jump_back"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">jump_back</span><span
+						class="method-args">(key = nil)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Jump the cursor to a record for backward scan.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>key</var></strong> the key of the destination record. 
+If it is nil, the destination is the last record.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> This method is dedicated to tree databases.  Some
+database types, especially hash databases, will provide a dummy
+implementation.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="jump-back-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 234</span>
+234:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">jump_back</span>(<span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>)
+235:       <span class="ruby-comment cmt"># (native code)</span>
+236:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="remove-method" class="method-detail ">
+				<a name="method-i-remove"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">remove</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Remove the current record.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> If no record corresponds to the key, false is
+returned.  The cursor is moved to the next record implicitly.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="remove-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 200</span>
+200:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">remove</span>()
+201:       <span class="ruby-comment cmt"># (native code)</span>
+202:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="set-value-method" class="method-detail ">
+				<a name="method-i-set_value"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">set_value</span><span
+						class="method-args">(value, step = false)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Set the value of the current record.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>value</var></strong> the value.
+</p>
+</li>
+<li><p>
+<strong>@param <var>step</var></strong> true to move the cursor to the next
+record, or false for no move.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="set-value-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 194</span>
+194:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_value</span>(<span class="ruby-identifier">value</span>, <span class="ruby-identifier">step</span> = <span class="ruby-keyword kw">false</span>)
+195:       <span class="ruby-comment cmt"># (native code)</span>
+196:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="step-method" class="method-detail ">
+				<a name="method-i-step"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">step</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Step the cursor to the next record.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="step-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 239</span>
+239:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step</span>()
+240:       <span class="ruby-comment cmt"># (native code)</span>
+241:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="step-back-method" class="method-detail ">
+				<a name="method-i-step_back"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">step_back</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Step the cursor to the previous record.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> true on success, or false on failure.
+</p>
+</li>
+<li><p>
+<strong>@note</strong> This method is dedicated to tree databases.  Some
+database types, especially hash databases, may provide a dummy
+implementation.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="step-back-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 245</span>
+245:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">step_back</span>()
+246:       <span class="ruby-comment cmt"># (native code)</span>
+247:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="to-s-method" class="method-detail ">
+				<a name="method-i-to_s"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">to_s</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Get the string expression.
+</p>
+<ul>
+<li><p>
+<strong>@return</strong> the string expression.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="to-s-source">
+<pre>
+     <span class="ruby-comment cmt"># File kyotocabinet.rb, line 260</span>
+260:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>()
+261:       <span class="ruby-comment cmt"># (native code)</span>
+262:     <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+
