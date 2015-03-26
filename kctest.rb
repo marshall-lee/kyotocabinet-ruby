@@ -195,7 +195,6 @@ def procorder(path, rnum, gopts, thnum, rnd, etc)
   threads = Array::new
   for thid in 0...thnum
     th = Thread::new(thid) { |id|
-      me = Thread::current
       base = id * rnum
       range = rnum * thnum
       for i in 1..rnum
@@ -227,7 +226,6 @@ def procorder(path, rnum, gopts, thnum, rnd, etc)
     threads = Array::new
     for thid in 0...thnum
       th = Thread::new(thid) { |id|
-        me = Thread::current
         base = id * rnum
         range = rnum * thnum
         for i in 1..rnum
@@ -260,7 +258,6 @@ def procorder(path, rnum, gopts, thnum, rnd, etc)
     threads = Array::new
     for thid in 0...thnum
       th = Thread::new(thid) { |id|
-        me = Thread::current
         base = id * rnum
         range = rnum * thnum
         for i in 1..rnum
@@ -344,7 +341,6 @@ def procorder(path, rnum, gopts, thnum, rnd, etc)
   threads = Array::new
   for thid in 0...thnum
     th = Thread::new(thid) { |id|
-      me = Thread::current
       base = id * rnum
       range = rnum * thnum
       for i in 1..rnum
@@ -485,7 +481,6 @@ def procorder(path, rnum, gopts, thnum, rnd, etc)
   threads = Array::new
   for thid in 0...thnum
     th = Thread::new(thid) { |id|
-      me = Thread::current
       base = id * rnum
       range = rnum * thnum
       for i in 1..rnum
@@ -631,7 +626,7 @@ def procwicked(path, rnum, gopts, thnum, itnum)
                     dberrprint(db, "Cursor::jump_back")
                     err = true
                   end
-                rescue Error::XNOIMPL => e
+                rescue Error::XNOIMPL
                 end
               else
                 if !cur.jump(key) && db.error != Error::NOREC
@@ -876,7 +871,7 @@ def procmisc(path)
       while cur.accept(cur, true)
         cur.step_back
       end
-    rescue Error::XNOIMPL => e
+    rescue Error::XNOIMPL
       if !cur.jump
         dberrprint(db, "Cursor::jump")
         err = true
@@ -1148,7 +1143,7 @@ def procmisc(path)
   printf("shifting records:\n")
   ocnt = db.count
   cnt = 0
-  while rec = db.shift
+  while db.shift
     cnt += 1
   end
   if db.error != Error::NOREC

@@ -2,7 +2,7 @@ require 'rubygems'
 
 spec = Gem::Specification.new do |s|
   s.name = "kyotocabinet"
-  s.version = "1.30"
+  s.version = "1.31"
   s.author = "FAL Labs"
   s.email = "info@fallabs.com"
   s.homepage = "http://fallabs.com/kyotocabinet/"

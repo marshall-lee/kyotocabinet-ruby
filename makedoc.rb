@@ -6,8 +6,8 @@ File::open("kyotocabinet-doc.rb") { |ifile|
   File::open("kyotocabinet.rb", "w") { |ofile|
     ifile.each { |line|
       line = line.chomp
-      line = line.sub(/# +@param +(\w+) +/, '# - <strong>@param <var>\\1</var></strong> ')
-      line = line.sub(/# +@(\w+) +/, '# - <strong>@\\1</strong> ')
+      line = line.sub(/# +@param +(\w+) +/, '# - <b>@param <i>\\1</i></b> ')
+      line = line.sub(/# +@(\w+) +/, '# - <b>@\\1</b> ')
       ofile.printf("%s\n", line)
     }
   }
