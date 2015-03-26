@@ -119,6 +119,7 @@ static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself);
 static VALUE db_cas(VALUE vself, VALUE vkey, VALUE voval, VALUE vnval);
 static VALUE db_remove(VALUE vself, VALUE vkey);
 static VALUE db_get(VALUE vself, VALUE vkey);
+static VALUE db_check(VALUE vself, VALUE vkey);
 static VALUE db_seize(VALUE vself, VALUE vkey);
 static VALUE db_set_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself);
@@ -1993,6 +1994,7 @@ static void define_db() {
   rb_define_method(cls_db, "cas", (METHOD)db_cas, 3);
   rb_define_method(cls_db, "remove", (METHOD)db_remove, 1);
   rb_define_method(cls_db, "get", (METHOD)db_get, 1);
+  rb_define_method(cls_db, "check", (METHOD)db_check, 1);
   rb_define_method(cls_db, "seize", (METHOD)db_seize, 1);
   rb_define_method(cls_db, "set_bulk", (METHOD)db_set_bulk, -1);
   rb_define_method(cls_db, "remove_bulk", (METHOD)db_remove_bulk, -1);
@@ -2831,6 +2833,46 @@ static VALUE db_get(VALUE vself, VALUE vkey) {
     db_raise(vself);
   }
   return vrv;
+}
+
+
+/**
+ * Implementation of check.
+ */
+static VALUE db_check(VALUE vself, VALUE vkey) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  vkey = StringValueEx(vkey);
+  const char* kbuf = RSTRING_PTR(vkey);
+  size_t ksiz = RSTRING_LEN(vkey);
+  int32_t vsiz;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+     public:
+      explicit FuncImpl(kc::PolyDB* db, const char* kbuf, size_t ksiz) :
+          db_(db), kbuf_(kbuf), ksiz_(ksiz), vsiz_(-1) {}
+      int32_t rv() {
+        return vsiz_;
+      }
+     private:
+      void operate() {
+        vsiz_ = db_->check(kbuf_, ksiz_);
+      }
+      kc::PolyDB* db_;
+      const char* kbuf_;
+      size_t ksiz_;
+      int32_t vsiz_;
+    } func(db, kbuf, ksiz);
+    NativeFunction::execute(&func);
+    vsiz = func.rv();
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    vsiz = db->check(kbuf, ksiz);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  if (vsiz < 0) db_raise(vself);
+  return LL2NUM(vsiz);
 }
 
 

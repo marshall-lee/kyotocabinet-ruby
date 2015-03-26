@@ -438,6 +438,12 @@ module KyotoCabinet
     def get(key)
       # (native code)
     end
+    # Check the existence of a record.
+    # @param key the key.
+    # @return the size of the value, or -1 on failure.
+    def check(key)
+      # (native code)
+    end
     # Retrieve the value of a record and remove it atomically.
     # @param key the key.
     # @return the value of the corresponding record, or nil on failure.
