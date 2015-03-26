@@ -1953,7 +1953,7 @@ static VALUE db_open(int argc, VALUE* argv, VALUE vself) {
   Data_Get_Struct(vself, kc::PolyDB, db);
   volatile VALUE vpath, vmode;
   rb_scan_args(argc, argv, "02", &vpath, &vmode);
-  if (vpath == Qnil) vpath = rb_str_new2("*");
+  if (vpath == Qnil) vpath = rb_str_new2(":");
   vpath = StringValueEx(vpath);
   const char* path = RSTRING_PTR(vpath);
   uint32_t mode = vmode == Qnil ? kc::PolyDB::OWRITER | kc::PolyDB::OCREATE : NUM2INT(vmode);

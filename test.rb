@@ -3,6 +3,7 @@
 require 'rbconfig'
 
 confs = [
+         [ ":", 10000 ],
          [ "*", 10000 ],
          [ "%", 10000 ],
          [ "casket.kch", 10000 ],

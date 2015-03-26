@@ -1536,7 +1536,7 @@ DB::MAPPEND to append the new value.
           <a href="DB.src/M000036.html" target="Code" class="method-signature"
             onclick="popupCode('DB.src/M000036.html');return false;">
 
-          <span class="method-name">open</span><span class="method-args">(path = &quot;*&quot;, mode = DB::OWRITER | DB::OCREATE)</span>
+          <span class="method-name">open</span><span class="method-args">(path = &quot;:&quot;, mode = DB::OWRITER | DB::OCREATE)</span>
 
           </a>
 
@@ -1551,7 +1551,8 @@ Open a database file.
 <li><strong>@param <var>path</var></strong> the path of a database file. If it
 is &#8220;-&#8221;, the database will be a prototype hash database. If it
 is &#8220;+&#8221;, the database will be a prototype tree database. If it
-is &#8220;*&#8221;, the database will be a cache hash database. If it is
+is &#8220;:&#8221;, the database will be a stash database. If it is
+&#8220;*&#8221;, the database will be a cache hash database. If it is
 &#8220;%&#8221;, the database will be a cache tree database. If its suffix
 is &#8220;.kch&#8221;, the database will be a file hash database. If its
 suffix is &#8220;.kct&#8221;, the database will be a file tree database. If
@@ -1561,12 +1562,13 @@ directory tree database. Otherwise, this function fails. Tuning parameters
 can trail the name, separated by &#8220;#&#8221;. Each parameter is
 composed of the name and the value, separated by &#8220;=&#8221;. If the
 &#8220;type&#8221; parameter is specified, the database type is determined
-by the value in &#8220;-&#8221;, &#8220;+&#8221;, &#8220;*&#8221;,
-&#8220;%&#8221;, &#8220;kch&#8221;, &#8220;kct&#8221;, &#8220;kcd&#8221;,
-and &#8220;kcf&#8221;. All database types support the logging parameters of
-&#8220;log&#8221;, &#8220;logkinds&#8221;, and &#8220;logpx&#8221;. The
-prototype hash database and the prototype tree database do not support any
-other tuning parameter. The cache hash database supports
+by the value in &#8220;-&#8221;, &#8220;+&#8221;, &#8220;:&#8221;,
+&#8220;*&#8221;, &#8220;%&#8221;, &#8220;kch&#8221;, &#8220;kct&#8221;,
+&#8220;kcd&#8221;, and &#8220;kcf&#8221;. All database types support the
+logging parameters of &#8220;log&#8221;, &#8220;logkinds&#8221;, and
+&#8220;logpx&#8221;. The prototype hash database and the prototype tree
+database do not support any other tuning parameter. The stash database
+supports &#8220;bnum&#8221;. The cache hash database supports
 &#8220;opts&#8221;, &#8220;bnum&#8221;, &#8220;zcomp&#8221;,
 &#8220;capcount&#8221;, &#8220;capsize&#8221;, and &#8220;zkey&#8221;. The
 cache tree database supports all parameters of the cache hash database
