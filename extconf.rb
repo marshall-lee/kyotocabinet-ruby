@@ -26,5 +26,6 @@ printf("  \$LDFLAGS = %s\n", $LDFLAGS)
 printf("  \$libs = %s\n", $libs)
 
 if have_header('kccommon.h')
+  have_header('ruby/thread.h') && have_func('rb_thread_call_without_gvl', 'ruby/thread.h')
   create_makefile('kyotocabinet')
 end
