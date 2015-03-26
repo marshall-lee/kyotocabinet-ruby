@@ -98,9 +98,9 @@ Interface of database abstraction.
 
       <div class="name-list">
 
-        <a href="#M000074">[]</a>&nbsp;&nbsp;
+        <a href="#M000075">[]</a>&nbsp;&nbsp;
 
-        <a href="#M000075">[]=</a>&nbsp;&nbsp;
+        <a href="#M000076">[]=</a>&nbsp;&nbsp;
 
         <a href="#M000038">accept</a>&nbsp;&nbsp;
 
@@ -110,7 +110,7 @@ Interface of database abstraction.
 
         <a href="#M000044">append</a>&nbsp;&nbsp;
 
-        <a href="#M000056">begin_transaction</a>&nbsp;&nbsp;
+        <a href="#M000057">begin_transaction</a>&nbsp;&nbsp;
 
         <a href="#M000047">cas</a>&nbsp;&nbsp;
 
@@ -118,29 +118,29 @@ Interface of database abstraction.
 
         <a href="#M000037">close</a>&nbsp;&nbsp;
 
-        <a href="#M000055">copy</a>&nbsp;&nbsp;
+        <a href="#M000056">copy</a>&nbsp;&nbsp;
 
-        <a href="#M000061">count</a>&nbsp;&nbsp;
+        <a href="#M000062">count</a>&nbsp;&nbsp;
 
-        <a href="#M000068">cursor</a>&nbsp;&nbsp;
+        <a href="#M000069">cursor</a>&nbsp;&nbsp;
 
-        <a href="#M000069">cursor_process</a>&nbsp;&nbsp;
+        <a href="#M000070">cursor_process</a>&nbsp;&nbsp;
 
-        <a href="#M000077">delete</a>&nbsp;&nbsp;
+        <a href="#M000078">delete</a>&nbsp;&nbsp;
 
-        <a href="#M000059">dump_snapshot</a>&nbsp;&nbsp;
+        <a href="#M000060">dump_snapshot</a>&nbsp;&nbsp;
 
-        <a href="#M000081">each</a>&nbsp;&nbsp;
+        <a href="#M000082">each</a>&nbsp;&nbsp;
 
-        <a href="#M000082">each_key</a>&nbsp;&nbsp;
+        <a href="#M000083">each_key</a>&nbsp;&nbsp;
 
-        <a href="#M000083">each_value</a>&nbsp;&nbsp;
+        <a href="#M000084">each_value</a>&nbsp;&nbsp;
 
-        <a href="#M000057">end_transaction</a>&nbsp;&nbsp;
+        <a href="#M000058">end_transaction</a>&nbsp;&nbsp;
 
         <a href="#M000035">error</a>&nbsp;&nbsp;
 
-        <a href="#M000078">fetch</a>&nbsp;&nbsp;
+        <a href="#M000079">fetch</a>&nbsp;&nbsp;
 
         <a href="#M000049">get</a>&nbsp;&nbsp;
 
@@ -150,27 +150,29 @@ Interface of database abstraction.
 
         <a href="#M000046">increment_double</a>&nbsp;&nbsp;
 
-        <a href="#M000073">inspect</a>&nbsp;&nbsp;
+        <a href="#M000074">inspect</a>&nbsp;&nbsp;
 
         <a href="#M000040">iterate</a>&nbsp;&nbsp;
 
-        <a href="#M000080">length</a>&nbsp;&nbsp;
+        <a href="#M000081">length</a>&nbsp;&nbsp;
 
-        <a href="#M000060">load_snapshot</a>&nbsp;&nbsp;
+        <a href="#M000061">load_snapshot</a>&nbsp;&nbsp;
 
-        <a href="#M000065">match_prefix</a>&nbsp;&nbsp;
+        <a href="#M000066">match_prefix</a>&nbsp;&nbsp;
 
-        <a href="#M000066">match_regex</a>&nbsp;&nbsp;
+        <a href="#M000067">match_regex</a>&nbsp;&nbsp;
 
-        <a href="#M000067">merge</a>&nbsp;&nbsp;
+        <a href="#M000068">merge</a>&nbsp;&nbsp;
 
         <a href="#M000034">new</a>&nbsp;&nbsp;
 
+        <a href="#M000055">occupy</a>&nbsp;&nbsp;
+
         <a href="#M000036">open</a>&nbsp;&nbsp;
 
-        <a href="#M000063">path</a>&nbsp;&nbsp;
+        <a href="#M000064">path</a>&nbsp;&nbsp;
 
-        <a href="#M000084">process</a>&nbsp;&nbsp;
+        <a href="#M000085">process</a>&nbsp;&nbsp;
 
         <a href="#M000048">remove</a>&nbsp;&nbsp;
 
@@ -182,23 +184,23 @@ Interface of database abstraction.
 
         <a href="#M000050">set_bulk</a>&nbsp;&nbsp;
 
-        <a href="#M000079">shift</a>&nbsp;&nbsp;
+        <a href="#M000080">shift</a>&nbsp;&nbsp;
 
-        <a href="#M000062">size</a>&nbsp;&nbsp;
+        <a href="#M000063">size</a>&nbsp;&nbsp;
 
-        <a href="#M000064">status</a>&nbsp;&nbsp;
+        <a href="#M000065">status</a>&nbsp;&nbsp;
 
-        <a href="#M000076">store</a>&nbsp;&nbsp;
+        <a href="#M000077">store</a>&nbsp;&nbsp;
 
         <a href="#M000054">synchronize</a>&nbsp;&nbsp;
 
-        <a href="#M000072">to_s</a>&nbsp;&nbsp;
+        <a href="#M000073">to_s</a>&nbsp;&nbsp;
 
-        <a href="#M000058">transaction</a>&nbsp;&nbsp;
+        <a href="#M000059">transaction</a>&nbsp;&nbsp;
 
-        <a href="#M000071">tune_encoding</a>&nbsp;&nbsp;
+        <a href="#M000072">tune_encoding</a>&nbsp;&nbsp;
 
-        <a href="#M000070">tune_exception_rule</a>&nbsp;&nbsp;
+        <a href="#M000071">tune_exception_rule</a>&nbsp;&nbsp;
 
       </div>
     </div>
@@ -459,9 +461,9 @@ without the giant VM lock. However, it has a side effect that such methods
 with call back of Ruby code as <a href="DB.html#M000038">DB#accept</a>, <a
 href="DB.html#M000039">DB#accept_bulk</a>, <a
 href="DB.html#M000040">DB#iterate</a>, <a
-href="DB.html#M000081">DB#each</a>, <a
-href="DB.html#M000082">DB#each_key</a>, <a
-href="DB.html#M000083">DB#each_value</a>, <a
+href="DB.html#M000082">DB#each</a>, <a
+href="DB.html#M000083">DB#each_key</a>, <a
+href="DB.html#M000084">DB#each_value</a>, <a
 href="Cursor.html#M000020">Cursor#accept</a> are disabled.
 
 </li>
@@ -471,13 +473,13 @@ href="Cursor.html#M000020">Cursor#accept</a> are disabled.
       </div>
 
 
-      <div id="method-M000084" class="method-detail">
-        <a name="M000084"></a>
+      <div id="method-M000085" class="method-detail">
+        <a name="M000085"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000084.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000084.html');return false;">
+          <a href="DB.src/M000085.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000085.html');return false;">
 
           <span class="method-name">process</span><span class="method-args">(path = &quot;*&quot;, mode = DB::OWRITER | DB::OCREATE, opts = 0)</span>
 
@@ -520,13 +522,13 @@ parameters before the block and is closed implicitly after the block.
       <h3 class="section-bar">Public Instance methods</h3>
 
 
-      <div id="method-M000074" class="method-detail">
-        <a name="M000074"></a>
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000074.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000074.html');return false;">
+          <a href="DB.src/M000075.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000075.html');return false;">
 
           <span class="method-name">[]</span><span class="method-args">(key)</span>
 
@@ -544,13 +546,13 @@ An alias of <a href="DB.html#M000049">DB#get</a>.
       </div>
 
 
-      <div id="method-M000075" class="method-detail">
-        <a name="M000075"></a>
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000075.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000075.html');return false;">
+          <a href="DB.src/M000076.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000076.html');return false;">
 
           <span class="method-name">[]=</span><span class="method-args">(key, value)</span>
 
@@ -561,7 +563,7 @@ An alias of <a href="DB.html#M000049">DB#get</a>.
         <div class="method-description">
 
           <p>
-An alias of <a href="DB.html#M000076">DB#store</a>.
+An alias of <a href="DB.html#M000077">DB#store</a>.
 </p>
 
         </div>
@@ -746,13 +748,13 @@ the end of the existing value.
       </div>
 
 
-      <div id="method-M000056" class="method-detail">
-        <a name="M000056"></a>
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000056.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000056.html');return false;">
+          <a href="DB.src/M000057.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000057.html');return false;">
 
           <span class="method-name">begin_transaction</span><span class="method-args">(hard = false)</span>
 
@@ -877,13 +879,13 @@ Close the database file.
       </div>
 
 
-      <div id="method-M000055" class="method-detail">
-        <a name="M000055"></a>
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000055.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000055.html');return false;">
+          <a href="DB.src/M000056.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000056.html');return false;">
 
           <span class="method-name">copy</span><span class="method-args">(dest)</span>
 
@@ -909,13 +911,13 @@ Create a copy of the database file.
       </div>
 
 
-      <div id="method-M000061" class="method-detail">
-        <a name="M000061"></a>
+      <div id="method-M000062" class="method-detail">
+        <a name="M000062"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000061.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000061.html');return false;">
+          <a href="DB.src/M000062.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000062.html');return false;">
 
           <span class="method-name">count</span><span class="method-args">()</span>
 
@@ -938,13 +940,13 @@ Get the number of records.
       </div>
 
 
-      <div id="method-M000068" class="method-detail">
-        <a name="M000068"></a>
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000068.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000068.html');return false;">
+          <a href="DB.src/M000069.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000069.html');return false;">
 
           <span class="method-name">cursor</span><span class="method-args">()</span>
 
@@ -970,13 +972,13 @@ in use.
       </div>
 
 
-      <div id="method-M000069" class="method-detail">
-        <a name="M000069"></a>
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000069.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000069.html');return false;">
+          <a href="DB.src/M000070.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000070.html');return false;">
 
           <span class="method-name">cursor_process</span><span class="method-args">()</span>
 
@@ -1003,13 +1005,13 @@ cursor is disabled implicitly after the block.
       </div>
 
 
-      <div id="method-M000077" class="method-detail">
-        <a name="M000077"></a>
+      <div id="method-M000078" class="method-detail">
+        <a name="M000078"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000077.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000077.html');return false;">
+          <a href="DB.src/M000078.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000078.html');return false;">
 
           <span class="method-name">delete</span><span class="method-args">(key, value)</span>
 
@@ -1027,13 +1029,13 @@ An alias of <a href="DB.html#M000048">DB#remove</a>.
       </div>
 
 
-      <div id="method-M000059" class="method-detail">
-        <a name="M000059"></a>
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000059.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000059.html');return false;">
+          <a href="DB.src/M000060.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000060.html');return false;">
 
           <span class="method-name">dump_snapshot</span><span class="method-args">(dest)</span>
 
@@ -1059,13 +1061,13 @@ Dump records into a snapshot file.
       </div>
 
 
-      <div id="method-M000081" class="method-detail">
-        <a name="M000081"></a>
+      <div id="method-M000082" class="method-detail">
+        <a name="M000082"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000081.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000081.html');return false;">
+          <a href="DB.src/M000082.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000082.html');return false;">
 
           <span class="method-name">each</span><span class="method-args">()</span>
 
@@ -1092,13 +1094,13 @@ each record.
       </div>
 
 
-      <div id="method-M000082" class="method-detail">
-        <a name="M000082"></a>
+      <div id="method-M000083" class="method-detail">
+        <a name="M000083"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000082.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000082.html');return false;">
+          <a href="DB.src/M000083.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000083.html');return false;">
 
           <span class="method-name">each_key</span><span class="method-args">()</span>
 
@@ -1124,13 +1126,13 @@ Process the key of each record with a iterator block.
       </div>
 
 
-      <div id="method-M000083" class="method-detail">
-        <a name="M000083"></a>
+      <div id="method-M000084" class="method-detail">
+        <a name="M000084"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000083.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000083.html');return false;">
+          <a href="DB.src/M000084.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000084.html');return false;">
 
           <span class="method-name">each_value</span><span class="method-args">()</span>
 
@@ -1156,13 +1158,13 @@ Process the value of each record with a iterator block.
       </div>
 
 
-      <div id="method-M000057" class="method-detail">
-        <a name="M000057"></a>
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000057.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000057.html');return false;">
+          <a href="DB.src/M000058.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000058.html');return false;">
 
           <span class="method-name">end_transaction</span><span class="method-args">(commit = true)</span>
 
@@ -1218,13 +1220,13 @@ Get the last happened error.
       </div>
 
 
-      <div id="method-M000078" class="method-detail">
-        <a name="M000078"></a>
+      <div id="method-M000079" class="method-detail">
+        <a name="M000079"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000078.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000078.html');return false;">
+          <a href="DB.src/M000079.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000079.html');return false;">
 
           <span class="method-name">fetch</span><span class="method-args">(key, value)</span>
 
@@ -1394,13 +1396,13 @@ a decimal string. If existing value is not 16-byte, this method fails.
       </div>
 
 
-      <div id="method-M000073" class="method-detail">
-        <a name="M000073"></a>
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000073.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000073.html');return false;">
+          <a href="DB.src/M000074.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000074.html');return false;">
 
           <span class="method-name">inspect</span><span class="method-args">()</span>
 
@@ -1470,13 +1472,13 @@ operation must not be performed in this method.
       </div>
 
 
-      <div id="method-M000080" class="method-detail">
-        <a name="M000080"></a>
+      <div id="method-M000081" class="method-detail">
+        <a name="M000081"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000080.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000080.html');return false;">
+          <a href="DB.src/M000081.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000081.html');return false;">
 
           <span class="method-name">length</span><span class="method-args">()</span>
 
@@ -1487,20 +1489,20 @@ operation must not be performed in this method.
         <div class="method-description">
 
           <p>
-An alias of <a href="DB.html#M000061">DB#count</a>.
+An alias of <a href="DB.html#M000062">DB#count</a>.
 </p>
 
         </div>
       </div>
 
 
-      <div id="method-M000060" class="method-detail">
-        <a name="M000060"></a>
+      <div id="method-M000061" class="method-detail">
+        <a name="M000061"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000060.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000060.html');return false;">
+          <a href="DB.src/M000061.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000061.html');return false;">
 
           <span class="method-name">load_snapshot</span><span class="method-args">(src)</span>
 
@@ -1526,13 +1528,13 @@ Load records from a snapshot file.
       </div>
 
 
-      <div id="method-M000065" class="method-detail">
-        <a name="M000065"></a>
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000065.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000065.html');return false;">
+          <a href="DB.src/M000066.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000066.html');return false;">
 
           <span class="method-name">match_prefix</span><span class="method-args">(prefix, max = -1)</span>
 
@@ -1562,13 +1564,13 @@ it is negative, no limit is specified.
       </div>
 
 
-      <div id="method-M000066" class="method-detail">
-        <a name="M000066"></a>
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000066.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000066.html');return false;">
+          <a href="DB.src/M000067.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000067.html');return false;">
 
           <span class="method-name">match_regex</span><span class="method-args">(regex, max = -1)</span>
 
@@ -1598,13 +1600,13 @@ it is negative, no limit is specified.
       </div>
 
 
-      <div id="method-M000067" class="method-detail">
-        <a name="M000067"></a>
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000067.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000067.html');return false;">
+          <a href="DB.src/M000068.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000068.html');return false;">
 
           <span class="method-name">merge</span><span class="method-args">(srcary, mode = DB::MSET)</span>
 
@@ -1628,6 +1630,50 @@ DB::MAPPEND to append the new value.
 
 </li>
 <li><strong>@return</strong> true on success, or false on failure.
+
+</li>
+</ul>
+
+        </div>
+      </div>
+
+
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
+
+        <div class="method-heading">
+
+          <a href="DB.src/M000055.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000055.html');return false;">
+
+          <span class="method-name">occupy</span><span class="method-args">(writable = false, proc = nil)</span>
+
+          </a>
+
+        </div>
+
+        <div class="method-description">
+
+          <p>
+Occupy database by locking and do something meanwhile.
+</p>
+<ul>
+<li><strong>@param <var>writable</var></strong> true to use writer lock, or
+false to use reader lock.
+
+</li>
+<li><strong>@param <var>proc</var></strong> a processor object which implements
+the <a href="FileProcessor.html">FileProcessor</a> interface. If it is nil,
+no processing is performed.
+
+</li>
+<li><strong>@return</strong> true on success, or false on failure.
+
+</li>
+<li><strong>@note</strong> The operation of the processor is performed
+atomically and other threads accessing the same record are blocked. To
+avoid deadlock, any explicit database operation must not be performed in
+this method.
 
 </li>
 </ul>
@@ -1749,13 +1795,13 @@ the same database file at the same time.
       </div>
 
 
-      <div id="method-M000063" class="method-detail">
-        <a name="M000063"></a>
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000063.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000063.html');return false;">
+          <a href="DB.src/M000064.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000064.html');return false;">
 
           <span class="method-name">path</span><span class="method-args">()</span>
 
@@ -1966,13 +2012,13 @@ atomically, or false for non-atomic operations.
       </div>
 
 
-      <div id="method-M000079" class="method-detail">
-        <a name="M000079"></a>
+      <div id="method-M000080" class="method-detail">
+        <a name="M000080"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000079.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000079.html');return false;">
+          <a href="DB.src/M000080.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000080.html');return false;">
 
           <span class="method-name">shift</span><span class="method-args">()</span>
 
@@ -1996,13 +2042,13 @@ record, or nil on failure.
       </div>
 
 
-      <div id="method-M000062" class="method-detail">
-        <a name="M000062"></a>
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000062.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000062.html');return false;">
+          <a href="DB.src/M000063.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000063.html');return false;">
 
           <span class="method-name">size</span><span class="method-args">()</span>
 
@@ -2026,13 +2072,13 @@ failure.
       </div>
 
 
-      <div id="method-M000064" class="method-detail">
-        <a name="M000064"></a>
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000064.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000064.html');return false;">
+          <a href="DB.src/M000065.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000065.html');return false;">
 
           <span class="method-name">status</span><span class="method-args">()</span>
 
@@ -2056,13 +2102,13 @@ failure.
       </div>
 
 
-      <div id="method-M000076" class="method-detail">
-        <a name="M000076"></a>
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000076.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000076.html');return false;">
+          <a href="DB.src/M000077.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000077.html');return false;">
 
           <span class="method-name">store</span><span class="method-args">(key, value)</span>
 
@@ -2073,7 +2119,7 @@ failure.
         <div class="method-description">
 
           <p>
-An alias of <a href="DB.html#M000076">DB#store</a>.
+An alias of <a href="DB.html#M000077">DB#store</a>.
 </p>
 
         </div>
@@ -2116,19 +2162,25 @@ postprocessing.
 <li><strong>@return</strong> true on success, or false on failure.
 
 </li>
+<li><strong>@note</strong> The operation of the processor is performed
+atomically and other threads accessing the same record are blocked. To
+avoid deadlock, any explicit database operation must not be performed in
+this method.
+
+</li>
 </ul>
 
         </div>
       </div>
 
 
-      <div id="method-M000072" class="method-detail">
-        <a name="M000072"></a>
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000072.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000072.html');return false;">
+          <a href="DB.src/M000073.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000073.html');return false;">
 
           <span class="method-name">to_s</span><span class="method-args">()</span>
 
@@ -2151,13 +2203,13 @@ Get the string expression.
       </div>
 
 
-      <div id="method-M000058" class="method-detail">
-        <a name="M000058"></a>
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000058.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000058.html');return false;">
+          <a href="DB.src/M000059.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000059.html');return false;">
 
           <span class="method-name">transaction</span><span class="method-args">(hard = false)</span>
 
@@ -2189,13 +2241,13 @@ false or an exception is thrown, the transaction is aborted.
       </div>
 
 
-      <div id="method-M000071" class="method-detail">
-        <a name="M000071"></a>
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000071.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000071.html');return false;">
+          <a href="DB.src/M000072.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000072.html');return false;">
 
           <span class="method-name">tune_encoding</span><span class="method-args">(enc)</span>
 
@@ -2226,13 +2278,13 @@ Encoding::ASCII_8BIT.
       </div>
 
 
-      <div id="method-M000070" class="method-detail">
-        <a name="M000070"></a>
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
 
         <div class="method-heading">
 
-          <a href="DB.src/M000070.html" target="Code" class="method-signature"
-            onclick="popupCode('DB.src/M000070.html');return false;">
+          <a href="DB.src/M000071.html" target="Code" class="method-signature"
+            onclick="popupCode('DB.src/M000071.html');return false;">
 
           <span class="method-name">tune_exception_rule</span><span class="method-args">(codes)</span>
 

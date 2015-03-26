@@ -453,7 +453,16 @@ module KyotoCabinet
     # @param proc a postprocessor object which implements the FileProcessor interface.  If it is nil, no postprocessing is performed.
     # @block If it is specified, the block is called for postprocessing.
     # @return true on success, or false on failure.
+    # @note The operation of the processor is performed atomically and other threads accessing the same record are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
     def synchronize(hard = false, proc = nil)
+      # (native code)
+    end
+    # Occupy database by locking and do something meanwhile.
+    # @param writable true to use writer lock, or false to use reader lock.
+    # @param proc a processor object which implements the FileProcessor interface.  If it is nil, no processing is performed.
+    # @return true on success, or false on failure.
+    # @note The operation of the processor is performed atomically and other threads accessing the same record are blocked.  To avoid deadlock, any explicit database operation must not be performed in this method.
+    def occupy(writable = false, proc = nil)
       # (native code)
     end
     # Create a copy of the database file.

@@ -929,6 +929,16 @@ def procmisc(path)
       dberrprint(db, "DB::synchronize")
       err = true
     end
+    if !db.occupy(false, db)
+      dberrprint(db, "DB::occupy")
+      err = true
+    end
+    if !db.occupy { |tpath, count, size|
+        true
+      }
+      dberrprint(db, "DB::occupy")
+      err = true
+    end
     printf("performing transaction:\n")
     if !db.transaction {
         db["tako"] = "ika"

@@ -120,6 +120,7 @@ static VALUE db_remove_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_get_bulk(int argc, VALUE* argv, VALUE vself);
 static VALUE db_clear(VALUE vself);
 static VALUE db_synchronize(int argc, VALUE* argv, VALUE vself);
+static VALUE db_occupy(int argc, VALUE* argv, VALUE vself);
 static VALUE db_copy(VALUE vself, VALUE vdest);
 static VALUE db_begin_transaction(int argc, VALUE* argv, VALUE vself);
 static VALUE db_end_transaction(int argc, VALUE* argv, VALUE vself);
@@ -1838,6 +1839,7 @@ static void define_db() {
   rb_define_method(cls_db, "get_bulk", (METHOD)db_get_bulk, -1);
   rb_define_method(cls_db, "clear", (METHOD)db_clear, 0);
   rb_define_method(cls_db, "synchronize", (METHOD)db_synchronize, -1);
+  rb_define_method(cls_db, "occupy", (METHOD)db_occupy, -1);
   rb_define_method(cls_db, "copy", (METHOD)db_copy, 1);
   rb_define_method(cls_db, "begin_transaction", (METHOD)db_begin_transaction, -1);
   rb_define_method(cls_db, "end_transaction", (METHOD)db_end_transaction, -1);
@@ -2985,6 +2987,97 @@ static VALUE db_synchronize(int argc, VALUE* argv, VALUE vself) {
     } else {
       rb_funcall(vmutex, id_mtx_lock, 0);
       rv = db->synchronize(hard, NULL);
+      rb_funcall(vmutex, id_mtx_unlock, 0);
+    }
+    if (rv) {
+      vrv = Qtrue;
+    } else {
+      vrv = Qfalse;
+      db_raise(vself);
+    }
+  }
+  return vrv;
+}
+
+
+/**
+ * Implementation of occupy.
+ */
+static VALUE db_occupy(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vwritable, vproc;
+  rb_scan_args(argc, argv, "02", &vwritable, &vproc);
+  bool writable = vwritable != Qnil && vwritable != Qfalse;
+  volatile VALUE vrv;
+  if (rb_respond_to(vproc, id_fproc_process)) {
+    SoftFileProcessor proc(vself, vproc);
+    volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+    if (vmutex == Qnil) {
+      db->set_error(kc::PolyDB::Error::INVALID, "unsupported method");
+      db_raise(vself);
+      return Qnil;
+    }
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    bool rv = db->occupy(writable, &proc);
+    const char *emsg = proc.emsg();
+    if (emsg) {
+      db->set_error(kc::PolyDB::Error::LOGIC, emsg);
+      rv = false;
+    }
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+    if (rv) {
+      vrv = Qtrue;
+    } else {
+      vrv = Qfalse;
+      db_raise(vself);
+    }
+  } else if (rb_block_given_p()) {
+    SoftBlockFileProcessor proc(vself);
+    volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+    if (vmutex == Qnil) {
+      db->set_error(kc::PolyDB::Error::INVALID, "unsupported method");
+      db_raise(vself);
+      return Qnil;
+    }
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    bool rv = db->occupy(writable, &proc);
+    const char *emsg = proc.emsg();
+    if (emsg) {
+      db->set_error(kc::PolyDB::Error::LOGIC, emsg);
+      rv = false;
+    }
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+    if (rv) {
+      vrv = Qtrue;
+    } else {
+      vrv = Qfalse;
+      db_raise(vself);
+    }
+  } else {
+    bool rv;
+    volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+    if (vmutex == Qnil) {
+      class FuncImpl : public NativeFunction {
+      public:
+        explicit FuncImpl(kc::PolyDB* db, bool writable) :
+          db_(db), writable_(writable), rv_(false) {}
+        bool rv() {
+          return rv_;
+        }
+      private:
+        void operate() {
+          rv_ = db_->occupy(writable_, NULL);
+        }
+        kc::PolyDB* db_;
+        bool writable_;
+        bool rv_;
+      } func(db, writable);
+      NativeFunction::execute(&func);
+      rv = func.rv();
+    } else {
+      rb_funcall(vmutex, id_mtx_lock, 0);
+      rv = db->occupy(writable, NULL);
       rb_funcall(vmutex, id_mtx_unlock, 0);
     }
     if (rv) {
