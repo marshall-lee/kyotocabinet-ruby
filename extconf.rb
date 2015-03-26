@@ -15,7 +15,7 @@ kccflags = "-I/usr/local/include" if(kccflags.length < 1)
 kcldflags = "-L/usr/local/lib" if(kcldflags.length < 1)
 kclibs = "-lkyotocabinet -lz -lstdc++ -lrt -lpthread -lm -lc" if(kclibs.length < 1)
 
-Config::CONFIG["CPP"] = "g++ -E"
+RbConfig::CONFIG['CPP'] = "g++ -E"
 $CFLAGS = "-I. #{kccflags} -Wall #{$CFLAGS} -O2"
 $LDFLAGS = "#{$LDFLAGS} -L. #{kcldflags}"
 $libs = "#{$libs} #{kclibs}"
