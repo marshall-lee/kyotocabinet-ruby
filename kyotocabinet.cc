@@ -20,6 +20,9 @@ namespace kc = kyotocabinet;
 extern "C" {
 
 #include <ruby.h>
+#ifdef HAVE_RUBY_THREAD_H
+#include <ruby/thread.h>
+#endif
 
 #if RUBY_VM >= 1
 #define _KC_YARV_
@@ -598,16 +601,20 @@ class NativeFunction {
   virtual void operate() = 0;
   static void execute(NativeFunction* func) {
 #if defined(_KC_YARV_)
-    rb_thread_blocking_region(execute_impl, func, RUBY_UBF_IO, NULL);
+#ifdef HAVE_RB_THREAD_CALL_WITHOUT_GVL
+    rb_thread_call_without_gvl(execute_impl, func, RUBY_UBF_IO, NULL);
+#else
+    rb_thread_blocking_region((rb_blocking_function_t *)execute_impl, func, RUBY_UBF_IO, NULL);
+#endif
 #else
     func->operate();
 #endif
   }
  private:
-  static VALUE execute_impl(void* ptr) {
+  static void* execute_impl(void* ptr) {
     NativeFunction* func = (NativeFunction*)ptr;
     func->operate();
-    return Qnil;
+    return NULL;
   }
 };
 
