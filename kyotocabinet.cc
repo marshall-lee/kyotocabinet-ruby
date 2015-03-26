@@ -1921,7 +1921,7 @@ static void define_db() {
   rb_define_method(cls_db, "[]=", (METHOD)db_set, 2);
   rb_define_method(cls_db, "store", (METHOD)db_set, 2);
   rb_define_method(cls_db, "delete", (METHOD)db_remove, 1);
-  rb_define_method(cls_db, "fetch", (METHOD)db_set, 1);
+  rb_define_method(cls_db, "fetch", (METHOD)db_get, 1);
   rb_define_method(cls_db, "shift", (METHOD)db_shift, 0);
   rb_define_method(cls_db, "length", (METHOD)db_count, 0);
   rb_define_method(cls_db, "each", (METHOD)db_each, 0);

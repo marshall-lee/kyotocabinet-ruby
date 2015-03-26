@@ -2174,14 +2174,15 @@ is &#8220;.kch&#8221;, the database will be a file hash database.  If its
 suffix is &#8220;.kct&#8221;, the database will be a file tree database. 
 If its suffix is &#8220;.kcd&#8221;, the database will be a directory hash
 database.  If its suffix is &#8220;.kcf&#8221;, the database will be a
-directory tree database.  Otherwise, this function fails.  Tuning
+directory tree database.  If its suffix is &#8220;.kcx&#8221;, the database
+will be a plain text database.  Otherwise, this function fails.  Tuning
 parameters can trail the name, separated by &#8220;#&#8221;.  Each
 parameter is composed of the name and the value, separated by
 &#8220;=&#8221;.  If the &#8220;type&#8221; parameter is specified, the
 database type is determined by the value in &#8220;-&#8221;,
 &#8220;+&#8221;, &#8220;:&#8221;, &#8220;*&#8221;, &#8220;%&#8221;,
-&#8220;kch&#8221;, &#8220;kct&#8221;, &#8220;kcd&#8221;, and
-&#8220;kcf&#8221;.  All database types support the logging parameters of
+&#8220;kch&#8221;, &#8220;kct&#8221;, &#8220;kcd&#8221;, kcf&#8221;, and
+&#8220;kcx&#8221;.  All database types support the logging parameters of
 &#8220;log&#8221;, &#8220;logkinds&#8221;, and &#8220;logpx&#8221;.  The
 prototype hash database and the prototype tree database do not support any
 other tuning parameter.  The stash database supports &#8220;bnum&#8221;. 
@@ -2198,7 +2199,8 @@ file tree database supports all parameters of the file hash database and
 The directory hash database supports &#8220;opts&#8221;,
 &#8220;zcomp&#8221;, and &#8220;zkey&#8221;.  The directory tree database
 supports all parameters of the directory hash database and
-&#8220;psiz&#8221;, &#8220;rcomp&#8221;, &#8220;pccap&#8221; in addition.
+&#8220;psiz&#8221;, &#8220;rcomp&#8221;, &#8220;pccap&#8221; in addition. 
+The plain text database does not support any other tuning parameter.
 </p>
 </li>
 <li><p>
