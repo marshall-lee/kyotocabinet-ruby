@@ -689,6 +689,13 @@ def procwicked(path, rnum, gopts, thnum, itnum)
                 err = true
               end
             end
+            if rand(rnum / 50 + 1) == 0
+              origin = key[0,key.length-1]
+              if !db.match_similar(origin, 3, rand(10))
+                dberrprint(db, "DB::match_similar")
+                err = true
+              end
+            end
             if rand(10) == 0
               paracur = db.cursor
               paracur.jump(key)
@@ -753,6 +760,7 @@ def procmisc(path)
   atof("123.456mikio")
   hash_murmur(path)
   hash_fnv(path)
+  levdist(path, "casket")
   dcurs = Array::new
   printf("opening the database by iterator:\n")
   dberr = DB::process(path, DB::OWRITER | DB::OCREATE | DB::OTRUNCATE) { |db|

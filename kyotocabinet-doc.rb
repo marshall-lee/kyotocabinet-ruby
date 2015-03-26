@@ -54,6 +54,14 @@ module KyotoCabinet
   def hash_fnv(str)
     # (native code)
   end
+  # Calculate the levenshtein distance of two strings.
+  # @param a one string.
+  # @param b the other string.
+  # @param utf flag to treat keys as UTF-8 strings.
+  # @return the levenshtein distance.
+  def levdist(a, b, utf)
+    # (native code)
+  end
   #
   # Error data.
   #
@@ -548,6 +556,15 @@ module KyotoCabinet
     # @param max the maximum number to retrieve.  If it is negative, no limit is specified.
     # @return an array of matching keys, or nil on failure.
     def match_regex(regex, max = -1)
+      # (native code)
+    end
+    # Get keys similar to a string in terms of the levenshtein distance.
+    # @param origin the origin string.
+    # @param range the maximum distance of keys to adopt.
+    # @param utf flag to treat keys as UTF-8 strings.
+    # @param max the maximum number to retrieve.  If it is negative, no limit is specified.
+    # @return an array of matching keys, or nil on failure.
+    def match_similar(origin, range = 1, utf = false, max = -1)
       # (native code)
     end
     # Merge records from other databases.

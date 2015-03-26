@@ -91,6 +91,8 @@
 					
 					<li><a href="#method-i-hash_murmur">#hash_murmur</a></li>
 					
+					<li><a href="#method-i-levdist">#levdist</a></li>
+					
 				</ul>
 			</div>
 			
@@ -447,6 +449,60 @@ Get the hash value of a string by MurMur hashing.
 48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">hash_murmur</span>(<span class="ruby-identifier">str</span>)
 49:     <span class="ruby-comment cmt"># (native code)</span>
 50:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+
+				
+			</div>
+
+		
+			<div id="levdist-method" class="method-detail ">
+				<a name="method-i-levdist"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">levdist</span><span
+						class="method-args">(a, b, utf)</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Calculate the levenshtein distance of two strings.
+</p>
+<ul>
+<li><p>
+<strong>@param <var>a</var></strong> one string.
+</p>
+</li>
+<li><p>
+<strong>@param <var>b</var></strong> the other string.
+</p>
+</li>
+<li><p>
+<strong>@param <var>utf</var></strong> flag to treat keys as UTF-8 strings.
+</p>
+</li>
+<li><p>
+<strong>@return</strong> the levenshtein distance.
+</p>
+</li>
+</ul>
+					
+
+					
+					<div class="method-source-code"
+						id="levdist-source">
+<pre>
+    <span class="ruby-comment cmt"># File kyotocabinet.rb, line 62</span>
+62:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">levdist</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">utf</span>)
+63:     <span class="ruby-comment cmt"># (native code)</span>
+64:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>

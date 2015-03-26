@@ -13,7 +13,7 @@ File::open("kyotocabinet-doc.rb") { |ifile|
   }
 }
 
-system('rdoc --title "Kyoto Cabinet" -o doc kyotocabinet.rb')
+system('rdoc --title "Kyoto Cabinet" --main kyotocabinet.rb -o doc kyotocabinet.rb')
 
 IO::popen("find doc") { |list|
   list.each { |path|

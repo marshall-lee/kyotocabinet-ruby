@@ -45,6 +45,8 @@ typedef VALUE (*METHOD)(...);
 // function prototypes
 void Init_kyotocabinet();
 static VALUE StringValueEx(VALUE vobj);
+static int64_t vatoi(VALUE vobj);
+static double vatof(VALUE vobj);
 static VALUE rb_str_new_ex(VALUE vdb, const char* ptr, size_t size);
 static VALUE rb_str_new_ex2(VALUE vdb, const char* str);
 static VALUE findclass(const char* name);
@@ -58,6 +60,7 @@ static VALUE kc_atoix(VALUE vself, VALUE vstr);
 static VALUE kc_atof(VALUE vself, VALUE vstr);
 static VALUE kc_hash_murmur(VALUE vself, VALUE vstr);
 static VALUE kc_hash_fnv(VALUE vself, VALUE vstr);
+static VALUE kc_levdist(int argc, VALUE* argv, VALUE vself);
 static void threadyield();
 static void define_err();
 static void err_define_child(const char* name, uint32_t code);
@@ -137,6 +140,7 @@ static VALUE db_path(VALUE vself);
 static VALUE db_status(VALUE vself);
 static VALUE db_match_prefix(int argc, VALUE* argv, VALUE vself);
 static VALUE db_match_regex(int argc, VALUE* argv, VALUE vself);
+static VALUE db_match_similar(int argc, VALUE* argv, VALUE vself);
 static VALUE db_merge(int argc, VALUE* argv, VALUE vself);
 static VALUE db_cursor(VALUE vself);
 static VALUE db_cursor_process(VALUE vself);
@@ -647,6 +651,70 @@ static VALUE StringValueEx(VALUE vobj) {
 
 
 /**
+ * Convert a numeric parameter to an integer.
+ */
+static int64_t vatoi(VALUE vobj) {
+  switch (TYPE(vobj)) {
+    case T_FIXNUM: {
+      return FIX2INT(vobj);
+    }
+    case T_BIGNUM: {
+      return NUM2LL(vobj);
+    }
+    case T_FLOAT: {
+      double dnum = NUM2DBL(vobj);
+      if (kc::chknan(dnum)) {
+        return kc::INT64MIN;
+      } else if (kc::chkinf(dnum)) {
+        return dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
+      }
+      return dnum;
+    }
+    case T_TRUE: {
+      return 1;
+    }
+    case T_STRING: {
+      const char* str = RSTRING_PTR(vobj);
+      double dnum = kc::atof(str);
+      if (kc::chknan(dnum)) {
+        return kc::INT64MIN;
+      } else if (kc::chkinf(dnum)) {
+        return dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
+      }
+      return dnum;
+    }
+  }
+  return 0;
+}
+
+
+/**
+ * Convert a numeric parameter to a real number.
+ */
+static double vatof(VALUE vobj) {
+  switch (TYPE(vobj)) {
+    case T_FIXNUM: {
+      return FIX2INT(vobj);
+    }
+    case T_BIGNUM: {
+      return NUM2LL(vobj);
+    }
+    case T_FLOAT: {
+      return NUM2DBL(vobj);
+    }
+    case T_TRUE: {
+      return 1.0;
+    }
+    case T_STRING: {
+      const char* str = RSTRING_PTR(vobj);
+      return kc::atof(str);
+    }
+  }
+  return 0.0;
+}
+
+
+/**
  * Generate a string object with the internal encoding of the database.
  */
 static VALUE rb_str_new_ex(VALUE vdb, const char* ptr, size_t size) {
@@ -746,6 +814,7 @@ static void define_module() {
   rb_define_method(mod_kc, "atof", (METHOD)kc_atof, 1);
   rb_define_method(mod_kc, "hash_murmur", (METHOD)kc_hash_murmur, 1);
   rb_define_method(mod_kc, "hash_fnv", (METHOD)kc_hash_fnv, 1);
+  rb_define_method(mod_kc, "levdist", (METHOD)kc_levdist, -1);
   cls_ex = findclass("RuntimeError");
   cls_str = findclass("String");
   id_str_force_encoding = rb_intern("force_encoding");
@@ -811,12 +880,45 @@ static VALUE kc_hash_murmur(VALUE vself, VALUE vstr) {
 
 
 /**
- * Implementation of fnv.
+ * Implementation of hash_fnv.
  */
 static VALUE kc_hash_fnv(VALUE vself, VALUE vstr) {
   vstr = StringValueEx(vstr);
   uint64_t hash = kc::hashfnv(RSTRING_PTR(vstr), RSTRING_LEN(vstr));
   return ULL2NUM(hash);
+}
+
+
+/**
+ * Implementation of levdist.
+ */
+static VALUE kc_levdist(int argc, VALUE* argv, VALUE vself) {
+  volatile VALUE va, vb, vutf;
+  rb_scan_args(argc, argv, "21", &va, &vb, &vutf);
+  va = StringValueEx(va);
+  const char* abuf = RSTRING_PTR(va);
+  size_t asiz = RSTRING_LEN(va);
+  vb = StringValueEx(vb);
+  const char* bbuf = RSTRING_PTR(vb);
+  size_t bsiz = RSTRING_LEN(vb);
+  bool utf = vutf != Qnil && vutf != Qfalse;
+  size_t dist;
+  if (utf) {
+    uint32_t astack[128];
+    uint32_t* aary = asiz > sizeof(astack) / sizeof(*astack) ? new uint32_t[asiz] : astack;
+    size_t anum;
+    kc::strutftoucs(abuf, asiz, aary, &anum);
+    uint32_t bstack[128];
+    uint32_t* bary = bsiz > sizeof(bstack) / sizeof(*bstack) ? new uint32_t[bsiz] : bstack;
+    size_t bnum;
+    kc::strutftoucs(bbuf, bsiz, bary, &bnum);
+    dist = kc::strucsdist(aary, anum, bary, bnum);
+    if (bary != bstack) delete[] bary;
+    if (aary != astack) delete[] aary;
+  } else {
+    dist = kc::memdist(abuf, asiz, bbuf, bsiz);
+  }
+  return INT2FIX((int)dist);
 }
 
 
@@ -1910,6 +2012,7 @@ static void define_db() {
   rb_define_method(cls_db, "status", (METHOD)db_status, 0);
   rb_define_method(cls_db, "match_prefix", (METHOD)db_match_prefix, -1);
   rb_define_method(cls_db, "match_regex", (METHOD)db_match_regex, -1);
+  rb_define_method(cls_db, "match_similar", (METHOD)db_match_similar, -1);
   rb_define_method(cls_db, "merge", (METHOD)db_merge, -1);
   rb_define_method(cls_db, "cursor", (METHOD)db_cursor, 0);
   rb_define_method(cls_db, "cursor_process", (METHOD)db_cursor_process, 0);
@@ -1921,7 +2024,7 @@ static void define_db() {
   rb_define_method(cls_db, "[]=", (METHOD)db_set, 2);
   rb_define_method(cls_db, "store", (METHOD)db_set, 2);
   rb_define_method(cls_db, "delete", (METHOD)db_remove, 1);
-  rb_define_method(cls_db, "fetch", (METHOD)db_get, 1);
+  rb_define_method(cls_db, "fetch", (METHOD)db_set, 1);
   rb_define_method(cls_db, "shift", (METHOD)db_shift, 0);
   rb_define_method(cls_db, "length", (METHOD)db_count, 0);
   rb_define_method(cls_db, "each", (METHOD)db_each, 0);
@@ -2487,68 +2590,8 @@ static VALUE db_increment(int argc, VALUE* argv, VALUE vself) {
   vkey = StringValueEx(vkey);
   const char* kbuf = RSTRING_PTR(vkey);
   size_t ksiz = RSTRING_LEN(vkey);
-  int64_t num = 0;
-  switch (TYPE(vnum)) {
-    case T_FIXNUM: {
-      num = FIX2INT(vnum);
-      break;
-    }
-    case T_BIGNUM: {
-      num = NUM2LL(vnum);
-      break;
-    }
-    case T_FLOAT: {
-      num = NUM2DBL(vnum);
-      break;
-    }
-    case T_TRUE: {
-      num = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vnum);
-      num = kc::atoi(str);
-      break;
-    }
-  }
-  int64_t orig = 0;
-  switch (TYPE(vorig)) {
-    case T_FIXNUM: {
-      orig = FIX2INT(vorig);
-      break;
-    }
-    case T_BIGNUM: {
-      orig = NUM2LL(vorig);
-      break;
-    }
-    case T_FLOAT: {
-      double dnum = NUM2DBL(vorig);
-      if (kc::chknan(dnum)) {
-        orig = kc::INT64MIN;
-      } else if (kc::chkinf(dnum)) {
-        orig = dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
-      } else {
-        orig = dnum;
-      }
-      break;
-    }
-    case T_TRUE: {
-      orig = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vorig);
-      double dnum = kc::atof(str);
-      if (kc::chknan(dnum)) {
-        orig = kc::INT64MIN;
-      } else if (kc::chkinf(dnum)) {
-        orig = dnum < 0 ? kc::INT64MIN : kc::INT64MAX;
-      } else {
-        orig = dnum;
-      }
-      break;
-    }
-  }
+  int64_t num = vnum == Qnil ? 0 : vatoi(vnum);
+  int64_t orig = vorig == Qnil ? 0 : vatoi(vorig);
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
@@ -2598,54 +2641,8 @@ static VALUE db_increment_double(int argc, VALUE* argv, VALUE vself) {
   vkey = StringValueEx(vkey);
   const char* kbuf = RSTRING_PTR(vkey);
   size_t ksiz = RSTRING_LEN(vkey);
-  double num = 0;
-  switch (TYPE(vnum)) {
-    case T_FIXNUM: {
-      num = FIX2INT(vnum);
-      break;
-    }
-    case T_BIGNUM: {
-      num = NUM2LL(vnum);
-      break;
-    }
-    case T_FLOAT: {
-      num = NUM2DBL(vnum);
-      break;
-    }
-    case T_TRUE: {
-      num = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vnum);
-      num = kc::atof(str);
-      break;
-    }
-  }
-  double orig = 0;
-  switch (TYPE(vorig)) {
-    case T_FIXNUM: {
-      orig = FIX2INT(vorig);
-      break;
-    }
-    case T_BIGNUM: {
-      orig = NUM2LL(vorig);
-      break;
-    }
-    case T_FLOAT: {
-      orig = NUM2DBL(vorig);
-      break;
-    }
-    case T_TRUE: {
-      orig = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vorig);
-      orig = kc::atof(str);
-      break;
-    }
-  }
+  double num = vnum == Qnil ? 0.0 : vatof(vnum);
+  double orig = vorig == Qnil ? 0.0 : vatof(vorig);
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   if (vmutex == Qnil) {
@@ -3573,30 +3570,7 @@ static VALUE db_match_prefix(int argc, VALUE* argv, VALUE vself) {
   vprefix = StringValueEx(vprefix);
   const char* pbuf = RSTRING_PTR(vprefix);
   size_t psiz = RSTRING_LEN(vprefix);
-  int64_t max = -1;
-  switch (TYPE(vmax)) {
-    case T_FIXNUM: {
-      max = FIX2INT(vmax);
-      break;
-    }
-    case T_BIGNUM: {
-      max = NUM2LL(vmax);
-      break;
-    }
-    case T_FLOAT: {
-      max = NUM2DBL(vmax);
-      break;
-    }
-    case T_TRUE: {
-      max = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vmax);
-      max = kc::atoi(str);
-      break;
-    }
-  }
+  int64_t max = vmax == Qnil ? -1 : vatoi(vmax);
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   StringVector keys;
@@ -3649,30 +3623,7 @@ static VALUE db_match_regex(int argc, VALUE* argv, VALUE vself) {
   vregex = StringValueEx(vregex);
   const char* rbuf = RSTRING_PTR(vregex);
   size_t rsiz = RSTRING_LEN(vregex);
-  int64_t max = -1;
-  switch (TYPE(vmax)) {
-    case T_FIXNUM: {
-      max = FIX2INT(vmax);
-      break;
-    }
-    case T_BIGNUM: {
-      max = NUM2LL(vmax);
-      break;
-    }
-    case T_FLOAT: {
-      max = NUM2DBL(vmax);
-      break;
-    }
-    case T_TRUE: {
-      max = 1;
-      break;
-    }
-    case T_STRING: {
-      const char* str = RSTRING_PTR(vmax);
-      max = kc::atoi(str);
-      break;
-    }
-  }
+  int64_t max = vmax == Qnil ? -1 : vatoi(vmax);
   volatile VALUE vrv;
   volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
   StringVector keys;
@@ -3702,6 +3653,64 @@ static VALUE db_match_regex(int argc, VALUE* argv, VALUE vself) {
   } else {
     rb_funcall(vmutex, id_mtx_lock, 0);
     rv = db->match_regex(std::string(rbuf, rsiz), &keys, max);
+    rb_funcall(vmutex, id_mtx_unlock, 0);
+  }
+  if (rv >= 0) {
+    vrv = vectortovarray(vself, &keys);
+  } else {
+    vrv = Qnil;
+    db_raise(vself);
+  }
+  return vrv;
+}
+
+
+/**
+ * Implementation of match_similar.
+ */
+static VALUE db_match_similar(int argc, VALUE* argv, VALUE vself) {
+  kc::PolyDB* db;
+  Data_Get_Struct(vself, kc::PolyDB, db);
+  volatile VALUE vorigin, vrange, vutf, vmax;
+  rb_scan_args(argc, argv, "13", &vorigin, &vrange, &vutf, &vmax);
+  vorigin = StringValueEx(vorigin);
+  const char* obuf = RSTRING_PTR(vorigin);
+  size_t osiz = RSTRING_LEN(vorigin);
+  int64_t range = vrange == Qnil ? 1 : vatoi(vrange);
+  bool utf = vutf != Qnil && vutf != Qfalse;
+  int64_t max = vmax == Qnil ? -1 : vatoi(vmax);
+  volatile VALUE vrv;
+  volatile VALUE vmutex = rb_ivar_get(vself, id_db_mutex);
+  StringVector keys;
+  int64_t rv;
+  if (vmutex == Qnil) {
+    class FuncImpl : public NativeFunction {
+     public:
+      explicit FuncImpl(kc::PolyDB* db, const char* obuf, size_t osiz, int64_t range, bool utf,
+                        StringVector* keys, int64_t max) :
+          db_(db), obuf_(obuf), osiz_(osiz), range_(range), utf_(utf),
+          keys_(keys), max_(max), rv_(0) {}
+      int64_t rv() {
+        return rv_;
+      }
+     private:
+      void operate() {
+        rv_ = db_->match_similar(std::string(obuf_, osiz_), range_, utf_, keys_, max_);
+      }
+      kc::PolyDB* db_;
+      const char* obuf_;
+      size_t osiz_;
+      size_t range_;
+      bool utf_;
+      StringVector* keys_;
+      int64_t max_;
+      int64_t rv_;
+    } func(db, obuf, osiz, range, utf, &keys, max);
+    NativeFunction::execute(&func);
+    rv = func.rv();
+  } else {
+    rb_funcall(vmutex, id_mtx_lock, 0);
+    rv = db->match_similar(std::string(obuf, osiz), range, utf, &keys, max);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
   if (rv >= 0) {
