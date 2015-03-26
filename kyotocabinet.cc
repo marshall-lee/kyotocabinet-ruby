@@ -155,8 +155,8 @@ static VALUE db_process_ensure(VALUE args);
 
 
 // global variables
-const int32_t VISMAGICNOP = INT32_MAX / 4 + 0;
-const int32_t VISMAGICREMOVE = INT32_MAX / 4 + 1;
+const int32_t VISMAGICNOP = kc::INT32MAX / 4 + 0;
+const int32_t VISMAGICREMOVE = kc::INT32MAX / 4 + 1;
 VALUE mod_kc;
 VALUE cls_ex;
 VALUE cls_str;
@@ -2477,7 +2477,7 @@ static VALUE db_increment(int argc, VALUE* argv, VALUE vself) {
     num = db->increment(kbuf, ksiz, num);
     rb_funcall(vmutex, id_mtx_unlock, 0);
   }
-  if (num == INT64_MIN) {
+  if (num == kc::INT64MIN) {
     vrv = Qnil;
     db_raise(vself);
   } else {

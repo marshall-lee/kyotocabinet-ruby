@@ -1730,15 +1730,17 @@ cipher key of the compressor. &#8220;capcnt&#8221; is for
 &#8220;cap_count&#8220;. &#8220;capsiz&#8221; is for
 &#8220;cap_size&#8220;. &#8220;psiz&#8221; is for &#8220;tune_page&#8220;.
 &#8220;rcomp&#8221; is for &#8220;tune_comparator&#8220; and the value can
-be &#8220;lex&#8221; for the lexical comparator or &#8220;dec&#8221; for
-the decimal comparator. &#8220;pccap&#8221; is for
-&#8220;tune_page_cache&#8220;. &#8220;apow&#8221; is for
-&#8220;tune_alignment&#8220;. &#8220;fpow&#8221; is for
-&#8220;tune_fbp&#8220;. &#8220;msiz&#8221; is for &#8220;tune_map&#8220;.
-&#8220;dfunit&#8221; is for &#8220;tune_defrag&#8220;. Every opened
-database must be closed by the PolyDB::close method when it is no longer in
-use. It is not allowed for two or more database objects in the same process
-to keep their connections to the same database file at the same time.
+be &#8220;lex&#8221; for the lexical comparator, &#8220;dec&#8221; for the
+decimal comparator, &#8220;lexdesc&#8221; for the lexical descending
+comparator, or &#8220;decdesc&#8221; for the decimal descending comparator.
+&#8220;pccap&#8221; is for &#8220;tune_page_cache&#8220;.
+&#8220;apow&#8221; is for &#8220;tune_alignment&#8220;. &#8220;fpow&#8221;
+is for &#8220;tune_fbp&#8220;. &#8220;msiz&#8221; is for
+&#8220;tune_map&#8220;. &#8220;dfunit&#8221; is for
+&#8220;tune_defrag&#8220;. Every opened database must be closed by the
+PolyDB::close method when it is no longer in use. It is not allowed for two
+or more database objects in the same process to keep their connections to
+the same database file at the same time.
 
 </li>
 </ul>
