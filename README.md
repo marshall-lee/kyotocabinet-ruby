@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/marshall-lee/kyotocabinet-ruby.svg)](https://travis-ci.org/marshall-lee/kyotocabinet-ruby)
 Kyoto Cabinet
 =============
+[![Build Status](https://travis-ci.org/marshall-lee/kyotocabinet-ruby.svg)](https://travis-ci.org/marshall-lee/kyotocabinet-ruby)
 
 In this repo i try to reanimate a [kyotocabinet-ruby gem](https://rubygems.org/gems/kyotocabinet-ruby).
 
