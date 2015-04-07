@@ -30,7 +30,7 @@ formats = [
            ]
 
 system("rm -rf casket*")
-rubycmd = Config::CONFIG["bindir"] + "/" + RbConfig::CONFIG['ruby_install_name']
+rubycmd = RbConfig::CONFIG["bindir"] + "/" + RbConfig::CONFIG['ruby_install_name']
 all = confs.size * formats.size
 cnt = 0
 oknum = 0
@@ -56,3 +56,5 @@ if oknum == cnt
 else
   printf("%d/%d tests failed\n", cnt - oknum, cnt)
 end
+
+exit oknum - cnt
