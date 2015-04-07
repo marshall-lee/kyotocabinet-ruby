@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/marshall-lee/kyotocabinet-ruby.svg)](https://travis-ci.org/marshall-lee/kyotocabinet-ruby)
 Kyoto Cabinet
 =============
 
