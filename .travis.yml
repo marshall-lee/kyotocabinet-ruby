@@ -11,5 +11,6 @@ before_install:
   - ./configure --prefix=/usr
   - make
   - sudo make install
+  - cd ..
 install: gem build kyotocabinet.gemspec && gem install kyotocabinet-*.gem
 script: ./test.rb
