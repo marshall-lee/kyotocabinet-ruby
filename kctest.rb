@@ -1127,7 +1127,7 @@ def procmisc(path)
       srcary.push(srcdb)
     end
     if !db.merge(srcary, DB::MAPPEND)
-      dberrprint(srcdb, "DB::merge")
+      dberrprint(db, "DB::merge")
       err = true
     end
     srcary.each do |srcdb|
