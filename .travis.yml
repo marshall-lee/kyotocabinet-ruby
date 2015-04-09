@@ -5,7 +5,11 @@ rvm:
   - 2.1.5
   - 2.2.1
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libkyotocabinet-dev
+  - wget http://fallabs.com/kyotocabinet/pkg/kyotocabinet-1.2.76.tar.gz
+  - tar -xzf kyotocabinet-1.2.76.tar.gz
+  - cd kyotocabinet-1.2.76
+  - ./configure --prefix=/usr
+  - make
+  - make install
 install: gem build kyotocabinet.gemspec && gem install kyotocabinet-*.gem
 script: ./test.rb
