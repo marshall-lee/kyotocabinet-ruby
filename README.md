@@ -12,7 +12,7 @@ In this repo i try to reanimate a [kyotocabinet-ruby gem](https://rubygems.org/g
 To use it just add this line to your Gemfile:
 
 ```ruby
-gem 'kyotocabinet-ruby', github: 'marshall-lee/kyotocabinet-ruby', branch: '1-32'
+gem 'kyotocabinet-ruby-reanimated', github: 'marshall-lee/kyotocabinet-ruby', branch: '1-32'
 ```
 
 Or this way:
