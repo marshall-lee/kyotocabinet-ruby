@@ -6,6 +6,9 @@ rvm:
   - 2.0.0
   - 2.1.5
   - 2.2.1
+matrix:
+  allow_failures:
+    - rvm: 1.8.7
 before_install:
   - wget http://fallabs.com/kyotocabinet/pkg/kyotocabinet-1.2.76.tar.gz
   - tar -xzf kyotocabinet-1.2.76.tar.gz
