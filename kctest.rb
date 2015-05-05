@@ -16,6 +16,7 @@
 #-------------------------------------------------------------------------------------------------
 
 
+require 'rubygems'
 require 'kyotocabinet'
 require 'fileutils'
 include KyotoCabinet
